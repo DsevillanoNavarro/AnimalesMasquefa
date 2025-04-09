@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Header from './components/header'; // Importa el componente Header
+import LeerAnimales from './components/LeerAnimales'; 
 
 function App() {
   return (
     <div className="App">
-      <Header /> {/* Usa el componente Header aquí */}
+      <LeerAnimales /> {/* Usa el componente Header aquí */}
       {/* Aquí puedes añadir el resto de tu contenido */}
     </div>
   );

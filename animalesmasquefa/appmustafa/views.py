@@ -1,7 +1,7 @@
 from rest_framework import viewsets
-from .models import Producto
-from .serializers import ProductoSerializer
+from .models import Animal
+from .serializers import AnimalSerializer
 
-class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
+class AnimalViewSet(viewsets.ModelViewSet):
+    queryset = Animal.objects.all()
+    serializer_class = AnimalSerializer
