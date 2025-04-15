@@ -9,7 +9,7 @@ class Animal(models.Model):
     fecha_nacimiento = models.DateField()
     edad = models.PositiveIntegerField(editable=False, null=True, blank=True) 
     situacion = models.TextField(max_length=750)
-    imagen = models.ImageField(upload_to='animales')
+    imagen = models.ImageField(upload_to='animales/')
 
     class Meta:
         verbose_name = 'Animal'
@@ -33,7 +33,7 @@ class Animal(models.Model):
 
 class Noticia(models.Model):
     titulo=models.CharField(max_length=100)
-    imagen=models.ImageField(upload_to='noticias') 
+    imagen=models.ImageField(upload_to='noticias/') 
     contenido=models.TextField(max_length=1000)
     fecha_publicacion=models.DateField()
     class Meta:

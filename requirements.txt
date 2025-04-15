@@ -5,3 +5,5 @@ djangorestframework
 psycopg2-binary
 dj-database-url
 pillow
+djangorestframework-simplejwt
+cryptography
