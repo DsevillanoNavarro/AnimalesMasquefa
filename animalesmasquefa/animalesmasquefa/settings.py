@@ -58,9 +58,9 @@ MIDDLEWARE = [
 ]
 
 SIMPLE_JWT = {
-    'ALGORITHM': 'RS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': SECRET_KEY,
+    "ALGORITHM": "RS256",
+    "SIGNING_KEY": open("./private.key").read(),
+    "VERIFYING_KEY": open("./public.key").read(),
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

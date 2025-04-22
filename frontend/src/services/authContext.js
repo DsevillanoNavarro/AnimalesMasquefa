@@ -21,13 +21,14 @@ export const AuthProvider = ({ children }) => {
     const validateToken = (token) => {
         // Aquí puedes hacer una llamada a tu API para validar el token
         // Por ejemplo, podrías hacer una solicitud a un endpoint de verificación
-        fetch('/api/token/verify/', {
+        fetch('http://localhost:8000/api/token/verify/', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({ token }), // ✅ aquí va el token
         })
+        
         .then(response => {
             if (response.ok) {
                 setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
@@ -46,14 +47,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = (token) => {
-        localStorage.setItem('access_token', token); // Guardamos el token en localStorage
-        setIsAuthenticated(true); // Marcamos al usuario como autenticado
+        localStorage.setItem('access_token', token);
+        validateToken(token); // Esto debe activar el cambio en la app
     };
-
+    
+    
     const logout = () => {
-        localStorage.removeItem('access_token'); // Eliminamos el token al hacer logout
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token'); // Eliminamos el token al hacer logout
         setIsAuthenticated(false); // Marcamos al usuario como no autenticado
-        navigate('/login'); // Redirigimos al login usando useNavigate
+        navigate('/'); // Redirigimos al login usando useNavigate
     };
 
     return (
