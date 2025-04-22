@@ -1,0 +1,58 @@
+.hero-section {
+  background-image: url('../Images/GatoHome.avif');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  width: 100%;
+  color: white;
+  padding: 60px 0;
+}
+
+.hero-title {
+  font-family: 'Afacad', sans-serif;
+  font-size: 8vw;
+  font-weight: bold; /* Asegura que el texto esté en negrita */
+  line-height: 1.1;
+}
+
+.custom-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px; /* Aumento del tamaño de la fuente */
+  font-weight: 900; /* Aumenta el grosor de la fuente */
+  padding: 30px 60px; /* Aumento del padding para hacerlo más grande */
+  background-color: #4170E8 !important;
+  color: white !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  transition: background-color 0.5s ease;
+  border-radius: 0 !important;
+}
+
+.custom-btn:hover {
+  background-color: #000000 !important;
+}
+
+/* Ajustes para pantallas más pequeñas de 1200px */
+@media (max-width: 1200px) {
+  .hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Centra todo al fondo */
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 6vw; /* Ajuste de tamaño para pantallas menores a 1200px */
+    max-width: 75%; /* Controla el ancho para evitar más de dos líneas */
+    white-space: normal; /* Permite que el texto se divida en líneas */
+    word-wrap: break-word; /* Evita el desbordamiento del texto */
+    margin-bottom: 20px; /* Añade un espacio entre el título y el botón */
+  }
+
+  .custom-btn {
+    font-size: 36px; /* Ajuste del tamaño del botón en pantallas más pequeñas */
+    padding: 25px 50px; /* Ajuste del padding en pantallas pequeñas */
+    margin-bottom: 20px; /* Añade un pequeño margen abajo */
+  }
+}

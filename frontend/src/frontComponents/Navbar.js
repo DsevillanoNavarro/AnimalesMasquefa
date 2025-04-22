@@ -10,10 +10,10 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-xxl bg-white fixed-top py-2 px-4">
-      <div className="container position-relative">
+      <div className="container position-relative slide-down-fade">
 
         {/* Fila superior (móvil) con hamburguesa + título centrado */}
-        <div className="d-flex d-xxl-none w-100 align-items-center justify-content-between">
+        <div className="d-flex d-xxl-none w-100 align-items-center justify-content-between slide-down-fade">
           <button
             className={`navbar-toggler custom-toggler ${isCollapsed ? '' : 'open'}`}
             type="button"
@@ -25,7 +25,7 @@ const Navbar = () => {
           </button>
 
           {/* Texto ajustado para móvil con animación */}
-          <Link to="/" className="navbar-brand fw-medium mb-0 mobile-title slide-down-fade">
+          <Link to="/" className="navbar-brand fw-medium mb-0 mobile-title ">
             ANIMALISTES MASQUEFA
           </Link>
 

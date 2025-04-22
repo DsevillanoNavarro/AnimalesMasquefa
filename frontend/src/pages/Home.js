@@ -1,12 +1,12 @@
 // src/pages/Home.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../frontComponents/Navbar';
+import HomeImage from '../frontComponents/HomeImage';
 function Home() {
   return (
     <div>
-      <Navbar></Navbar>
-
+      
+      <HomeImage/>
       <h1>Bienvenido a la página de inicio</h1>
       <p>Esta es la página principal de nuestra aplicación.</p>
       <li><Link to="/about">Acerca de</Link></li>
