@@ -5,21 +5,30 @@
   min-height: 100vh;
   width: 100%;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrado vertical por defecto */
   padding: 60px 0;
+}
+.imgHome {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 10% !important;
+  margin-right: 0;
 }
 
 .hero-title {
   font-family: 'Afacad', sans-serif;
   font-size: 8vw;
-  font-weight: bold; /* Asegura que el texto esté en negrita */
+  font-weight: bold;
   line-height: 1.1;
 }
 
 .custom-btn {
   font-family: 'Poppins', sans-serif;
-  font-size: 40px; /* Aumento del tamaño de la fuente */
-  font-weight: 900; /* Aumenta el grosor de la fuente */
-  padding: 30px 60px; /* Aumento del padding para hacerlo más grande */
+  font-size: 30px !important;
+  font-weight: 900;
+  padding: 20px 40px !important;
   background-color: #4170E8 !important;
   color: white !important;
   border: none;
@@ -33,26 +42,38 @@
   background-color: #000000 !important;
 }
 
-/* Ajustes para pantallas más pequeñas de 1200px */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
   .hero-section {
+    justify-content: flex-end;
+    padding: 0 20px 40px 20px;
+  }
+
+  .imgHome {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0 !important;
+    margin-right: 0;
+  }
+  .custom-btn {
+    padding: 10px 20px !important;
+  }
+
+  .hero-text-wrapper {
     display: flex;
-    justify-content: center;
-    align-items: flex-end; /* Centra todo al fondo */
-    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center !important;
   }
 
   .hero-title {
-    font-size: 6vw; /* Ajuste de tamaño para pantallas menores a 1200px */
-    max-width: 75%; /* Controla el ancho para evitar más de dos líneas */
-    white-space: normal; /* Permite que el texto se divida en líneas */
-    word-wrap: break-word; /* Evita el desbordamiento del texto */
-    margin-bottom: 20px; /* Añade un espacio entre el título y el botón */
+    font-size: 8vh;
+    margin-bottom: 20px;
+    text-align:center !important;
   }
 
   .custom-btn {
-    font-size: 36px; /* Ajuste del tamaño del botón en pantallas más pequeñas */
-    padding: 25px 50px; /* Ajuste del padding en pantallas pequeñas */
-    margin-bottom: 20px; /* Añade un pequeño margen abajo */
+    font-size: 6vw;
+    padding: 20px 40px;
+    margin-bottom: 10px;
   }
 }

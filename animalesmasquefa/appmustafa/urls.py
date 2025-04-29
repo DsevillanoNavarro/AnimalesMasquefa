@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import AnimalViewSet, UsuarioViewSet, LoginView
+from .views import AnimalViewSet, UsuarioViewSet, LoginView, NoticiaViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 router = DefaultRouter()
 router.register(r'animales', AnimalViewSet)
 router.register(r'usuarios', UsuarioViewSet)
+router.register(r'noticias', NoticiaViewSet)
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Esta es la ruta correcta para obtener el token

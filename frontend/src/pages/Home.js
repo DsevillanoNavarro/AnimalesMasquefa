@@ -2,11 +2,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HomeImage from '../frontComponents/HomeImage';
+import HomeCats from '../frontComponents/HomeCats';
+import HomeVideo from '../frontComponents/HomeVideo';
+import HomeNoticias from '../frontComponents/HomeNoticias';
 function Home() {
   return (
     <div>
-      
       <HomeImage/>
+      <HomeCats/>
+      <HomeVideo/>
+      <HomeNoticias/>
       <h1>Bienvenido a la página de inicio</h1>
       <p>Esta es la página principal de nuestra aplicación.</p>
       <li><Link to="/about">Acerca de</Link></li>

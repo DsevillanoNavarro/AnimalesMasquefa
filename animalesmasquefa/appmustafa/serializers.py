@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Animal
+from .models import Animal, Noticia
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
@@ -9,6 +9,11 @@ from django.utils.html import format_html
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
+        fields = '__all__'
+        
+class NoticiaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Noticia
         fields = '__all__'
 
 class UsuarioSerializer(serializers.ModelSerializer):

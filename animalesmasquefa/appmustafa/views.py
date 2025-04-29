@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Animal
-from .serializers import AnimalSerializer, UsuarioSerializer
+from .models import Animal, Noticia
+from .serializers import AnimalSerializer, UsuarioSerializer, NoticiaSerializer
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -12,6 +12,10 @@ from rest_framework.permissions import AllowAny
 class AnimalViewSet(viewsets.ModelViewSet):
     queryset = Animal.objects.all()
     serializer_class = AnimalSerializer
+    
+class NoticiaViewSet(viewsets.ModelViewSet):
+    queryset = Noticia.objects.all()
+    serializer_class = NoticiaSerializer
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
