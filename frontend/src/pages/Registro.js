@@ -1,6 +1,6 @@
 // src/pages/Home.js
 import React from 'react';
-import Registro from '../components/Registro'; 
+import Registro from '../Authentication/Registro.js'; 
 function Home() {
   return (
     <div>

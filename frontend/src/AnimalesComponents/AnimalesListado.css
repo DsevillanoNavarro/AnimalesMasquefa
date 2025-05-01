@@ -12,12 +12,7 @@
     padding-right: 15px;
   }
   
-  .gallery-title {
-    font-size: 60px;
-    font-weight: 600;
-    text-align: left;
-    margin-bottom: 4rem;
-  }
+
   
   .cat-image-container {
     position: relative;
@@ -81,3 +76,47 @@
       text-align: center;
     }
   }
+  .custom-select-wrapper {
+    position: relative;
+  }
+  
+  .custom-select {
+    appearance: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px 35px 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    font-family: 'Afacad', sans-serif;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+  }
+  
+  .custom-pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 10px;
+  }
+  
+  .custom-pagination .page-number {
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background-color: #eee;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    font-family: 'Afacad', sans-serif;
+  }
+  
+  .custom-pagination .page-number:hover {
+    background-color: #ccc;
+  }
+  
+  .custom-pagination .page-number.active {
+    background-color: black;
+    color: white;
+  }
+  

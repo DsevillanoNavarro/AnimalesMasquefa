@@ -14,7 +14,7 @@ const NoticiasRecientes = () => {
 
   return (
     <div className="container HomeNoticiasContainer news-gallery py-4">
-      <h1 className="gallery-title">ÚLTIMAS NOTICIAS</h1>
+      <h2 className="gallery-title">ÚLTIMAS NOTICIAS</h2>
       <div className="row gx-4 justify-content-center">
         {noticias.map((noticia, index) => (
           <div className="col-12 col-sm-6 col-md-4 mb-4" key={index}>

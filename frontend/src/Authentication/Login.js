@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import loginService from '../services/loginService';
-import { useAuth } from '../services/authContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
     const [form, setForm] = useState({ username: '', password: '' });

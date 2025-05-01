@@ -5,7 +5,6 @@ import MiniCat from '../Lottie/MiniCat.json';
 const GatosComponent = () => {
   return (
     <div className="position-relative text-white" style={{ height: '100vh', overflow: 'hidden' }}>
-      {/* Animación encima del video */}
       <div className="text-center py-3">
         <div style={{ width: 40, height: 55, margin: '0 auto' }}>
           <Lottie animationData={MiniCat} loop={true} />
@@ -41,7 +40,7 @@ const GatosComponent = () => {
           className="text-white fw-bold d-inline-block mt-2"
           style={{ fontFamily: 'Poppins, sans-serif', textDecoration: 'none', fontSize: '1.1rem' }}
         >
-          Ver Nuestros Gatos <span style={{ display: 'inline-block', transform: 'scaleX(1.5)' }}>→</span>
+          Ver Nuestros Gatos <span style={{ display: 'inline-block', transform: 'scaleX(1.5)', marginLeft: '8px' }}>→</span>
         </a>
       </div>
     </div>

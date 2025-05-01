@@ -1,6 +1,6 @@
 // src/pages/Home.js
 import React from 'react';
-import Logout from '../components/Logout'; 
+import Logout from '../Authentication/Logout.js'; 
 function Home() {
   return (
     <div>

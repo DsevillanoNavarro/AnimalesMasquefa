@@ -1,67 +1,86 @@
+// src/services/animalService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api/animales/';  // URL de tu API
+const API_URL = 'http://localhost:8000/api/animales/';
 
-// Función para obtener todos los animales
-const getAnimales = () => {
-  return axios.get(API_URL);
-};
-
-// Función para obtener un animal por su ID
-const getAnimal = (id) => {
-  return axios.get(`${API_URL}${id}/`);  // Suponiendo que la API usa el formato /api/animales/{id}/
-};
-
-// Función para crear un animal
-const createAnimal = (animalData) => {
-  const formData = new FormData();
-  formData.append('nombre', animalData.get("nombre"));
-  formData.append('fecha_nacimiento', animalData.get("fecha_nacimiento"));
-  formData.append('situacion', animalData.get("situacion"));
-
-  // Si existe una imagen, la agregamos también
-  if (animalData.get("imagen")) {
-    formData.append('imagen', animalData.get("imagen"));  // Suponiendo que animalData.imagen es un archivo
+// Obtener todos los animales
+const getAnimales = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    return response;
+  } catch (error) {
+    console.error("Error al obtener los animales:", error);
+    throw error;
   }
-
-  // Enviar el FormData, sin especificar Content-Type, ya que el navegador lo maneja automáticamente
-  return axios.post(API_URL, formData);
 };
 
-// Función para actualizar un animal
-const updateAnimal = (id, animalData) => {
+// Obtener un animal por ID
+const getAnimal = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}${id}/`);
+    return response;
+  } catch (error) {
+    console.error(`Error al obtener el animal con ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Crear un nuevo animal
+const createAnimal = async (animalData) => {
   const formData = new FormData();
-  // Agregar los datos del animal
-  console.log(animalData)
   formData.append('nombre', animalData.get("nombre"));
   formData.append('fecha_nacimiento', animalData.get("fecha_nacimiento"));
   formData.append('situacion', animalData.get("situacion"));
 
-  // Si hay una imagen, agregarla al FormData
   if (animalData.get("imagen")) {
     formData.append('imagen', animalData.get("imagen"));
   }
 
-  // Verificar los datos en el FormData antes de enviarlos
-  for (let pair of formData.entries()) {
-    console.log(pair[0] + ': ' + pair[1]);
+  try {
+    const response = await axios.post(API_URL, formData);
+    return response;
+  } catch (error) {
+    console.error("Error al crear el animal:", error);
+    throw error;
+  }
+};
+
+// Actualizar un animal existente
+const updateAnimal = async (id, animalData) => {
+  const formData = new FormData();
+  formData.append('nombre', animalData.get("nombre"));
+  formData.append('fecha_nacimiento', animalData.get("fecha_nacimiento"));
+  formData.append('situacion', animalData.get("situacion"));
+
+  if (animalData.get("imagen")) {
+    formData.append('imagen', animalData.get("imagen"));
   }
 
-  // Realizar la solicitud PUT con los datos
-  return axios.put(`${API_URL}${id}/`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',  // Esto es importante para enviar los datos correctamente
-    },
-  });
+  try {
+    const response = await axios.put(`${API_URL}${id}/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error(`Error al actualizar el animal con ID ${id}:`, error);
+    throw error;
+  }
 };
 
-
-
-// Función para eliminar un animal
-const deleteAnimal = (id) => {
-  return axios.delete(`${API_URL}${id}/`);
+// Eliminar un animal por ID
+const deleteAnimal = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}${id}/`);
+    return response;
+  } catch (error) {
+    console.error(`Error al eliminar el animal con ID ${id}:`, error);
+    throw error;
+  }
 };
 
+// Exportar funciones
 export default {
   getAnimales,
   getAnimal,

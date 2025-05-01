@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+body.no-animations *, 
+body.no-animations *::before, 
+body.no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+}

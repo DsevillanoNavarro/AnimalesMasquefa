@@ -1,7 +1,7 @@
 // src/pages/Home.js
 import React from 'react';
-import NotFound from '../frontComponents/NotFound'; 
-import Navbar from '../frontComponents/Navbar'; 
+import NotFound from '../HomeComponents/NotFound'; 
+import Navbar from '../HomeComponents/Navbar'; 
 function Home() {
   return (
     <div>

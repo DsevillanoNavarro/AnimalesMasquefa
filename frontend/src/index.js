@@ -1,17 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';  // Cambiar la importación de react-dom
-import { BrowserRouter } from 'react-router-dom';  // Importamos BrowserRouter
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { AuthProvider } from './services/authContext';  // Asegúrate de importar el AuthProvider
+import { AuthProvider } from './contexts/AuthContext';
+import { LoadingProvider } from './contexts/LoadingContext'; // 👈 Importar el proveedor de carga
 
-// Crear el "root" para React 18
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Renderizamos la aplicación en el "root"
 root.render(
   <BrowserRouter>
-    <AuthProvider>  {/* Aquí envolvemos el App con AuthProvider */}
-      <App />
+    <AuthProvider>
+      <LoadingProvider> {/* 👈 Envolver con LoadingProvider */}
+        <App />
+      </LoadingProvider>
     </AuthProvider>
   </BrowserRouter>
 );

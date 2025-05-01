@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../services/authContext'; // Ajusta el path si es necesario
+import { useAuth } from '../contexts/AuthContext'; // Ajusta el path si es necesario
 
 const LogoutButton = () => {
     const { logout } = useAuth();

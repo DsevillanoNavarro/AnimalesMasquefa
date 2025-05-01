@@ -1,10 +1,11 @@
 // src/pages/Home.js
 import React from 'react';
-import Login from '../Authentication/Login.js'; 
+import { Link } from 'react-router-dom';
+import SobreNosotros from '../SobreNosotros/SobreNosotros';
 function Home() {
   return (
     <div>
-        <Login/>
+      <SobreNosotros/>
     </div>
   );
 }
