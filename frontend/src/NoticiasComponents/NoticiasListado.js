@@ -43,8 +43,8 @@ const NoticiasRecientes = () => {
   const totalPaginas = Math.ceil(noticiasOrdenadas.length / noticiasPorPagina);
 
   return (
-    <div className="container HomeNoticiasContainer news-gallery py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <div className="container HomeNoticiasContainer news-gallery py-4 ">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap ">
         <h2 className="gallery-title mb-3 mb-md-0">ÚLTIMAS NOTICIAS</h2>
         <select
           className="custom-select"

@@ -1,71 +1,51 @@
+// src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Cambiar de useHistory a useNavigate
+import { api } from '../services/loginService';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const navigate = useNavigate(); // Usamos useNavigate en lugar de useHistory
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null = «no sé aún»
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        // Verifica si hay un token guardado en localStorage
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            // Aquí puedes agregar la lógica para validar el token
-            validateToken(token);
-        } else {
-            setIsAuthenticated(false); // Si no hay token, no está autenticado
-        }
-    }, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        // Intentamos refrescar el access_token usando el refresh_token en cookie
+        await api.post('/api/token/refresh/');
+        setIsAuthenticated(true);
+      } catch {
+        // Solo actualizamos el estado: no redirigimos aquí
+        setIsAuthenticated(false);
+      }
+    })();
+  }, []); // Quítale navigate de la dependencia para que no se vuelva a ejecutar
 
-    const validateToken = (token) => {
-        // Aquí puedes hacer una llamada a tu API para validar el token
-        // Por ejemplo, podrías hacer una solicitud a un endpoint de verificación
-        fetch('http://localhost:8000/api/token/verify/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token }), // ✅ aquí va el token
-        })
-        
-        .then(response => {
-            if (response.ok) {
-                setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
-            } else {
-                setIsAuthenticated(false); // Si el token no es válido, no está autenticado
-                localStorage.removeItem('access_token'); // Eliminar el token si no es válido
-                navigate('/login'); // Redirigir al login
-            }
-        })
-        .catch(error => {
-            console.error('Error al validar el token:', error);
-            setIsAuthenticated(false); // Si hay un error, no está autenticado
-            localStorage.removeItem('access_token'); // Eliminar el token en caso de error
-            navigate('/login'); // Redirigir al login
-        });
-    };
+  const login = async (username, password) => {
+    // Al hacer login, el backend fija ambas cookies en la respuesta
+    await api.post('/api/token/', { username, password });
+    setIsAuthenticated(true);
+    navigate('/', { replace: true });
+  };
 
-    const login = (token) => {
-        localStorage.setItem('access_token', token);
-        validateToken(token); // Esto debe activar el cambio en la app
-    };
-    
-    
-    const logout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token'); // Eliminamos el token al hacer logout
-        setIsAuthenticated(false); // Marcamos al usuario como no autenticado
-        navigate('/'); // Redirigimos al login usando useNavigate
-    };
+  const logout = () => {
+    // Borramos cookies client‑side y devolvemos a login
+    document.cookie = 'access_token=; Max-Age=0; path=/';
+    document.cookie = 'refresh_token=; Max-Age=0; path=/';
+    setIsAuthenticated(false);
+    navigate('/login', { replace: true });
+  };
 
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  // Mientras isAuthenticated === null, mostramos un loading…
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {isAuthenticated === null 
+        ? <p>Cargando sesión…</p>
+        : children
+      }
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-    return React.useContext(AuthContext); // Nos permite acceder al contexto de autenticación
-};
+export const useAuth = () => React.useContext(AuthContext);

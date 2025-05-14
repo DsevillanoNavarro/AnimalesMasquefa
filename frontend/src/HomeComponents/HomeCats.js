@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";          // <-- importamos useNavigate
 import animalService from "../services/animalService";
-import { useLoading } from "../contexts/LoadingContext"; // Importamos el hook
+import { useLoading } from "../contexts/LoadingContext"; 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./HomeCats.css";
 
 const CatGallery = () => {
   const [gatos, setGatos] = useState([]);
-  const { loading, setLoading } = useLoading(); // Usamos el contexto de carga
+  const { loading, setLoading } = useLoading();
+  const navigate = useNavigate();                         // <-- inicializamos navigate
 
   useEffect(() => {
-    setLoading(true); // Establecemos la carga a true cuando iniciamos la solicitud
+    setLoading(true);
 
     animalService.getAnimales().then((response) => {
       const ordenados = response.data.sort((a, b) => b.id - a.id);
       const ultimos4 = ordenados.slice(0, 4);
       setGatos(ultimos4);
-      setLoading(false); // Cuando los datos se han cargado, cambiamos la carga a false
+      setLoading(false);
     });
   }, [setLoading]);
 
@@ -33,7 +35,12 @@ const CatGallery = () => {
                   className="card-img-top cat-image"
                 />
                 <div className="overlay">
-                  <button className="adopt-btn">Adóptalo</button>
+                  <button
+                    className="adopt-btn"
+                    onClick={() => navigate(`/animales/${gato.id}`)}  // <-- navegamos al detalle
+                  >
+                    Adóptalo
+                  </button>
                 </div>
               </div>
               <div className="card-body px-0 pt-2">

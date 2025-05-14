@@ -1,17 +1,27 @@
 // src/services/loginService.js
-
 import axios from 'axios';
 
-const login = async (username, password) => {
-    try {
-        const response = await axios.post('http://localhost:8000/api/token/', {
-            username,
-            password
-        });
-        return response.data; // Devuelve el token o los datos que necesites
-    } catch (error) {
-        throw error; // Lanza el error para manejarlo en el componente
-    }
+const api = axios.create({
+  baseURL: 'http://localhost:8000',
+  withCredentials: true, // ¡muy importante para enviar/recibir cookies!
+});
+
+const loginService = async (username, password) => {
+  // Llama a tu endpoint que fija las cookies
+  const response = await api.post('/api/token/', { username, password });
+  return response.data; // { detail: 'Login exitoso' }
 };
 
-export default login; // Asegúrate de que estás exportando la función por defecto
+const refreshToken = async () => {
+  const response = await api.post('/api/token/refresh/');
+  return response.data;
+};
+
+const logoutService = async () => {
+  // Para “logout” simplemente descartas cookies del lado cliente:
+  // No hay endpoint por defecto; podrías crear uno que borre cookies server-side.
+  await api.post('/api/logout/'); // opcional
+};
+
+export default { loginService, refreshToken, logoutService };
+export { api };

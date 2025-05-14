@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -63,7 +63,10 @@ SIMPLE_JWT = {
     "VERIFYING_KEY": open("./public.key").read(),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 ROOT_URLCONF = 'animalesmasquefa.urls'
 
@@ -91,7 +94,7 @@ WSGI_APPLICATION = 'animalesmasquefa.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://admin:Zg7EjKJfax8XsZZoxpcPMBRD07kAcjdw@dpg-cvqclvbe5dus73f77cp0-a.oregon-postgres.render.com/dbmasquefa'
+        default='postgresql://animalistesmasquefa_user:bsvKfklGACS4CYdUmFlwpmCXDOwBXxGL@dpg-d0i4u195pdvs73fju8q0-a.frankfurt-postgres.render.com/animalistesmasquefa'
     )
 }
 
@@ -100,6 +103,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+SIMPLE_JWT = {
+    "AUTH_COOKIE": "access_token",         # Nombre de la cookie del access token
+    "AUTH_COOKIE_REFRESH": "refresh_token",# Nombre de la cookie del refresh token
+    "AUTH_COOKIE_SECURE": False,           # True en producción con HTTPS
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_PATH": "/",
+    "AUTH_COOKIE_SAMESITE": "Lax",
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 

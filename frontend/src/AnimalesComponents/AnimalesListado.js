@@ -3,6 +3,7 @@ import animalService from "../services/animalService";
 import { useLoading } from "../contexts/LoadingContext"; // Importa el contexto
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./AnimalesListado.css";
+import { useNavigate } from "react-router-dom";
 
 const calcularEdad = (fechaNacimiento) => {
   const nacimiento = new Date(fechaNacimiento);
@@ -15,6 +16,7 @@ const CatGallery = () => {
   const [gatos, setGatos] = useState([]);
   const [filtroEdad, setFiltroEdad] = useState("Todos");
   const [paginaActual, setPaginaActual] = useState(1);
+  const navigate = useNavigate();
   const gatosPorPagina = 12;
 
   const { loading, setLoading } = useLoading();
@@ -79,26 +81,31 @@ const CatGallery = () => {
       </div>
 
       <div className="row gx-4 justify-content-center fade-in">
-        {gatosPaginados.map((gato) => (
-          <div className="col-6 col-md-2 mb-4" key={gato.id}>
-            <div className="card cat-card border-0">
-              <div className="cat-image-container">
-                <img
-                  src={gato.imagen}
-                  alt={gato.nombre}
-                  className="card-img-top cat-image"
-                />
-                <div className="overlay">
-                  <button className="adopt-btn">Adóptalo</button>
-                </div>
-              </div>
-              <div className="card-body px-0 pt-2">
-                <h6 className="card-title text-start cat-name">{gato.nombre}</h6>
+      {gatosPaginados.map((gato) => (
+        <div className="col-6 col-md-2 mb-4" key={gato.id}>
+          <div className="card cat-card border-0">
+            <div className="cat-image-container">
+              <img
+                src={gato.imagen}
+                alt={gato.nombre}
+                className="card-img-top cat-image"
+              />
+              <div className="overlay">
+                <button
+                  className="adopt-btn"
+                  onClick={() => navigate(`/animales/${gato.id}`)}
+                >
+                  Adóptalo
+                </button>
               </div>
             </div>
+            <div className="card-body px-0 pt-2">
+              <h6 className="card-title text-start cat-name">{gato.nombre}</h6>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
 
       {/* Paginación */}
       <div className="d-flex justify-content-center mt-4">

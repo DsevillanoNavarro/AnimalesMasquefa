@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Animal, Noticia
+from .models import Animal, Noticia, Comentario, Adopcion
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
@@ -16,6 +16,16 @@ class NoticiaSerializer(serializers.ModelSerializer):
         model = Noticia
         fields = '__all__'
 
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentario
+        fields = '__all__'
+        
+class AdopcionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Adopcion
+        fields = '__all__'        
+        
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
