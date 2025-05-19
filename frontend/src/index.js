@@ -9,10 +9,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <BrowserRouter>
+  <LoadingProvider>
     <AuthProvider>
-      <LoadingProvider> {/* 👈 Envolver con LoadingProvider */}
+       {/* 👈 Envolver con LoadingProvider */}
         <App />
-      </LoadingProvider>
     </AuthProvider>
+    </LoadingProvider>
   </BrowserRouter>
 );

@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +33,8 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,9 +56,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
+
 
 SIMPLE_JWT = {
     "ALGORITHM": "RS256",
@@ -101,7 +103,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'appmustafa.authentication.CookieJWTAuthentication',
     ),
 }
 
@@ -112,7 +114,7 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_PATH": "/",
     "AUTH_COOKIE_SAMESITE": "Lax",
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 

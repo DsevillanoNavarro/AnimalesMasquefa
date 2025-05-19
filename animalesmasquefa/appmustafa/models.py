@@ -71,14 +71,29 @@ class Comentario(models.Model):
         verbose_name = 'Comentario'
         verbose_name_plural = 'Comentarios'
 
+def validate_pdf(file):
+    if not file.name.endswith('.pdf'):
+        raise ValidationError("Solo se permiten archivos PDF.")
+
+def pdf_upload_path(instance, filename):
+    return f'adopciones/{instance.usuario.id}/{filename}'
+
 class Adopcion(models.Model):
+    ESTADOS_ADOPCION = [
+        ('Aceptada', 'Aceptada'),
+        ('Rechazada', 'Rechazada'),
+        ('Pendiente', 'Pendiente'),
+    ]
+
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name="adopciones")
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="adopciones")
-    fecha_hora = models.DateTimeField(auto_now_add=True) 
-    aceptada = models.BooleanField(default=False)
-    contenido = models.TextField(max_length=1000)
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    aceptada = models.CharField(max_length=10, choices=ESTADOS_ADOPCION, default='Pendiente')
+    contenido = models.FileField(upload_to=pdf_upload_path, validators=[validate_pdf])
+
     class Meta:
         verbose_name = 'Adopcion'
         verbose_name_plural = 'Adopciones'
+
     def __str__(self):
         return self.animal.nombre

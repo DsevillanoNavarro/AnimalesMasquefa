@@ -48,12 +48,11 @@ const Navbar = () => {
               <Link className="nav-link text-black fw-medium fs-5 slide-down-fade" to="/animales">ANIMALES</Link>
               <Link className="nav-link text-black fw-medium fs-5 slide-down-fade" to="/noticias">NOTICIAS</Link>
             </div>
-
             {/* Derecha */}
             <div className="d-flex gap-3 flex-column flex-xxl-row align-items-xxl-center mt-3 mt-xxl-0">
               <Link className="nav-link text-black fw-medium fs-5 slide-down-fade" to="/sobrenosotros">SOBRE NOSOTROS</Link>
               <Link className="nav-link text-black fw-medium fs-5 slide-down-fade" to="/contacto">CONTACTO</Link>
-              <Person size={28} className="slide-down-fade" />
+              <Link className="nav-link text-black slide-down-fade" to="/perfil"><Person size={28} className="slide-down-fade" /></Link> 
             </div>
           </div>
         </div>

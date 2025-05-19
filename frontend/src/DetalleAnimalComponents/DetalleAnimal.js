@@ -40,6 +40,11 @@ const AnimalDetail = () => {
     return null;
   }
 
+  const handleAdoptar = () => {
+    // Redirecciona al formulario de adopción, pasando el animal por estado
+    navigate(`/adoptar/${animal.id}`, { state: { animal } });
+  };
+
   return (
     <div className="container AnimalDetail mt-5 pt-5 slide-down-fade">
       <div className="row align-items-start">
@@ -64,10 +69,7 @@ const AnimalDetail = () => {
           <p className="detail-desc">
             <strong>Situación:</strong> {animal.situacion}
           </p>
-          <button
-            className="custom-btn"
-            onClick={() => alert(`¡Has adoptado a ${animal.nombre}!`)}
-          >
+          <button className="custom-btn" onClick={handleAdoptar}>
             Adóptalo
           </button>
         </div>

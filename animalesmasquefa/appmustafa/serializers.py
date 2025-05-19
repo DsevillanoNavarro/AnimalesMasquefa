@@ -17,10 +17,15 @@ class NoticiaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    usuario = serializers.StringRelatedField(read_only=True)
+    tiempo_transcurrido = serializers.SerializerMethodField()
+
     class Meta:
         model = Comentario
-        fields = '__all__'
-        read_only_fields = ['usuario']
+        fields = ['id', 'noticia', 'usuario', 'contenido', 'fecha_hora', 'tiempo_transcurrido']
+
+    def get_tiempo_transcurrido(self, obj):
+        return obj.tiempo_transcurrido()
         
 class AdopcionSerializer(serializers.ModelSerializer):
     class Meta:

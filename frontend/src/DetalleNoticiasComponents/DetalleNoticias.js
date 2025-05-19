@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useLoading } from "../contexts/LoadingContext";
+import { useAuth } from "../contexts/AuthContext";
 import noticiaService from "../services/noticiaService";
+import comentarioService from "../services/comentarioService";
 import "./DetalleNoticias.css";
 
-const NoticiaDetail = () => {
+const DetalleNoticias = () => {
   const { id } = useParams();
   const { loading, setLoading } = useLoading();
-  const [noticia, setNoticia] = useState(null);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
+  const [noticia, setNoticia] = useState(null);
+  const [comentarios, setComentarios] = useState([]);
+  const [nuevoComentario, setNuevoComentario] = useState("");
+  const [comentariosLoading, setComentariosLoading] = useState(false);
+  const [comentarioError, setComentarioError] = useState(null);
+
+  // Cargar noticia
   useEffect(() => {
     setLoading(true);
     noticiaService
@@ -17,6 +27,42 @@ const NoticiaDetail = () => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id, setLoading]);
+
+  // Cargar comentarios
+  useEffect(() => {
+    if (!id) return;
+    setComentariosLoading(true);
+    comentarioService
+      .getComentariosPorNoticia(id)
+      .then((res) => setComentarios(res.data))
+      .catch((err) => {
+        console.error(err);
+        setComentarioError("Error al cargar comentarios");
+      })
+      .finally(() => setComentariosLoading(false));
+  }, [id]);
+
+  const handleLoginRedirect = () => {
+    navigate("/login");
+  };
+
+  const handlePublicarComentario = async () => {
+    if (!nuevoComentario.trim()) return;
+    setComentarioError(null);
+
+    try {
+      const response = await comentarioService.crearComentario({
+        noticia: id,
+        contenido: nuevoComentario.trim(),
+      });
+      // Añadir comentario nuevo al listado (al principio)
+      setComentarios((prev) => [response.data, ...prev]);
+      setNuevoComentario("");
+    } catch (error) {
+      console.error(error);
+      setComentarioError("Error al publicar comentario");
+    }
+  };
 
   if (loading) return null;
   if (!noticia) return <p className="loading">Noticia no encontrada</p>;
@@ -32,6 +78,7 @@ const NoticiaDetail = () => {
             className="img-fluid rounded"
           />
         </div>
+
         {/* Texto */}
         <div className="col-12 col-md-6">
           <h1 className="detail-title">{noticia.titulo}</h1>
@@ -45,8 +92,56 @@ const NoticiaDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Comentarios */}
+      <div className="comments-section mt-5">
+        <h3>Comentarios</h3>
+        {isAuthenticated ? (
+          <>
+            <textarea
+              className="form-control mb-2"
+              placeholder="Escribe un comentario..."
+              rows="3"
+              value={nuevoComentario}
+              onChange={(e) => setNuevoComentario(e.target.value)}
+            />
+            <button className="btn btn-primary mb-3" onClick={handlePublicarComentario}>
+              Publicar
+            </button>
+            {comentarioError && (
+              <div className="alert alert-danger">{comentarioError}</div>
+            )}
+            {comentariosLoading ? (
+              <p>Cargando comentarios...</p>
+            ) : comentarios.length === 0 ? (
+              <p>No hay comentarios aún.</p>
+            ) : (
+              comentarios.map((comentario) => (
+                <div key={comentario.id} className="mb-3 border-bottom pb-2">
+                  <strong>{comentario.usuario}</strong>{" "}
+                  <small className="text-muted">
+                    - {comentario.tiempo_transcurrido}
+                  </small>
+                  <p>{comentario.contenido}</p>
+                </div>
+              ))
+            )}
+          </>
+        ) : (
+          <div className="alert alert-info mt-3">
+            Debes estar logueado para ver o escribir comentarios.
+            <br />
+            <button
+              className="btn btn-outline-primary mt-2"
+              onClick={handleLoginRedirect}
+            >
+              Iniciar sesión
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default NoticiaDetail;
+export default DetalleNoticias;

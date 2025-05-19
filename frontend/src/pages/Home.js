@@ -25,6 +25,7 @@ function Home() {
       <li><Link to="/listadonoticias">Listado Noticias</Link></li>
       <li><Link to="/crearnoticias">Crear Noticias</Link></li>
       <li><Link to="/logout">Cerrar sesion</Link></li>
+      <li><Link to="/perfil">perfil</Link></li>
 
     </div>
   );

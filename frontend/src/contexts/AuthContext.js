@@ -2,48 +2,50 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { api } from '../services/loginService';
 import { useNavigate } from 'react-router-dom';
+import { useLoading } from './LoadingContext'; // 👈 importar tu servicio de loading
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // null = «no sé aún»
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
+  const { setLoading } = useLoading(); // 👈 obtener setLoading
 
   useEffect(() => {
     (async () => {
+      setLoading(true); // 👈 empieza loading
       try {
-        // Intentamos refrescar el access_token usando el refresh_token en cookie
         await api.post('/api/token/refresh/');
         setIsAuthenticated(true);
       } catch {
-        // Solo actualizamos el estado: no redirigimos aquí
         setIsAuthenticated(false);
+      } finally {
+        setLoading(false); // 👈 termina loading
       }
     })();
-  }, []); // Quítale navigate de la dependencia para que no se vuelva a ejecutar
+  }, []);
 
   const login = async (username, password) => {
-    // Al hacer login, el backend fija ambas cookies en la respuesta
-    await api.post('/api/token/', { username, password });
-    setIsAuthenticated(true);
-    navigate('/', { replace: true });
+    setLoading(true); // 👈 opcional, también podrías mostrar loading en login
+    try {
+      await api.post('/api/token/', { username, password });
+      setIsAuthenticated(true);
+      navigate('/', { replace: true });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
-    // Borramos cookies client‑side y devolvemos a login
     document.cookie = 'access_token=; Max-Age=0; path=/';
     document.cookie = 'refresh_token=; Max-Age=0; path=/';
     setIsAuthenticated(false);
     navigate('/login', { replace: true });
   };
 
-  // Mientras isAuthenticated === null, mostramos un loading…
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {isAuthenticated === null 
-        ? <p>Cargando sesión…</p>
-        : children
-      }
+      {children}
     </AuthContext.Provider>
   );
 };

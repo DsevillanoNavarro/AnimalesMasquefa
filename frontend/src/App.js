@@ -17,6 +17,9 @@ import Footer from './HomeComponents/Footer';
 import Navbar from './HomeComponents/Navbar';
 import DetalleAnimal from "./pages/DetalleAnimal";
 import DetalleNoticias from "./pages/DetalleNoticias";
+import Perfil from "./pages/Perfil";
+import Adoptar from "./pages/Adoptar";
+import AdopcionEnviada from "./pages/AdopcionEnviada";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
@@ -83,9 +86,12 @@ function AppContent() {
 
             {/* Agrupamos rutas protegidas bajo el guard */}
             <Route element={<RequireAuth />}>
+              <Route path="/perfil" element={<Perfil />} />
               <Route path="/listadoanimales" element={<ListadoAnimales />} />
               <Route path="/editar/:id" element={<EditarAnimales />} />
               <Route path="/listadoNoticias" element={<ListadoNoticias />} />
+              <Route path="/adoptar/:id" element={<Adoptar />} />
+              <Route path="/adopcionEnviada" element={<AdopcionEnviada />} />
             </Route>
 
             {/* Catch-all */}
@@ -98,14 +104,4 @@ function AppContent() {
   );
 }
 
-function App() {
-  return (
-    <LoadingProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </LoadingProvider>
-  );
-}
-
-export default App;
+export default AppContent;
