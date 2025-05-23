@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     (async () => {
       setLoading(true); // 👈 empieza loading
       try {
-        await api.post('/api/token/refresh/');
+        await api.post('/token/refresh/');
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     setLoading(true); // 👈 opcional, también podrías mostrar loading en login
     try {
-      await api.post('/api/token/', { username, password });
+      await api.post('/token/', { username, password });
       setIsAuthenticated(true);
       navigate('/', { replace: true });
     } finally {

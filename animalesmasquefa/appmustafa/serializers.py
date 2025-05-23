@@ -5,6 +5,9 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.utils.html import format_html
+from rest_framework import generics
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
 
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,3 +77,13 @@ class UsuarioSerializer(serializers.ModelSerializer):
         email.send(fail_silently=False)
 
         return user
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uidb64 = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(min_length=8)

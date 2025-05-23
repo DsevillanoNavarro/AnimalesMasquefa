@@ -14,23 +14,26 @@ from pathlib import Path
 import os
 import dj_database_url
 from datetime import timedelta
+from dotenv import load_dotenv  
+from django.utils.translation import gettext_lazy as _
 
+load_dotenv()  
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-print(BASE_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mh+db#f-@_3=ua=t7=f)x6sfehuj)&nvy&xq8@3(f*2alnus@7'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
 
 
+FRONTEND_URL = os.environ.get('FRONTEND_URL')
 
 INSTALLED_APPS = [
     'jet.dashboard',
@@ -46,31 +49,29 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
+    'auditlog',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware', 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-
-SIMPLE_JWT = {
-    "ALGORITHM": "RS256",
-    "SIGNING_KEY": open("./private.key").read(),
-    "VERIFYING_KEY": open("./public.key").read(),
-}
+JET_INDEX_DASHBOARD = 'animalesmasquefa.dashboard.CustomIndexDashboard'
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('FRONTEND_URL', '').split(',') if os.environ.get('FRONTEND_URL') else []
 
 ROOT_URLCONF = 'animalesmasquefa.urls'
+
+JET_DASHBOARD_ENABLE_PERSISTENT = False
 
 TEMPLATES = [
     {
@@ -94,10 +95,10 @@ WSGI_APPLICATION = 'animalesmasquefa.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://animalistesmasquefa_user:bsvKfklGACS4CYdUmFlwpmCXDOwBXxGL@dpg-d0i4u195pdvs73fju8q0-a.frankfurt-postgres.render.com/animalistesmasquefa'
-    )
+DATABASES = {  
+    'default': dj_database_url.config(  
+        default=os.environ.get('DATABASE_URL')  
+    )  
 }
 
 
@@ -110,15 +111,17 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "AUTH_COOKIE": "access_token",         # Nombre de la cookie del access token
     "AUTH_COOKIE_REFRESH": "refresh_token",# Nombre de la cookie del refresh token
-    "AUTH_COOKIE_SECURE": False,           # True en producción con HTTPS
-    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SECURE": True,           # True en producción con HTTPS
+    "AUTH_COOKIE_HTTP_ONLY": False,
     "AUTH_COOKIE_PATH": "/",
-    "AUTH_COOKIE_SAMESITE": "Lax",
+    "AUTH_COOKIE_SAMESITE": "None",
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE    = "None"
+JET_DASHBOARD_CACHE_TIMEOUT = 0
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -141,13 +144,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'  # Idioma por defecto en español
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'  # O tu zona horaria
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+
+# Si quieres permitir varios idiomas (opcional)
+
+
+LANGUAGES = [
+    ('es', _('Español')),
+    ('en', _('Inglés')),
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -161,19 +172,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'frontend/',  
-        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'), 
-    }
-}
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'animalistesmasquefabusiness@gmail.com'
-EMAIL_HOST_PASSWORD = 'ixtidmmrpsjzanrb'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
+EMAIL_HOST = os.environ.get('EMAIL_HOST')  
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))  
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'

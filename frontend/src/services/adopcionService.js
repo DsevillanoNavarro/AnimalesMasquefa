@@ -1,6 +1,7 @@
+// src/services/adopcionService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/adopciones/";
+const API_URL = `${process.env.REACT_APP_API_URL}/adopciones/`;
 
 // Obtener todas las adopciones (opcionalmente filtrando por animal o usuario)
 const getAdopciones = async (filters = {}) => {
@@ -8,7 +9,10 @@ const getAdopciones = async (filters = {}) => {
   const response = await axios.get(`${API_URL}?${params.toString()}`, {
     withCredentials: true,
   });
-  return response.data;
+  // Ajuste para paginación de DRF o respuesta directa
+  return Array.isArray(response.data)
+    ? response.data
+    : response.data.results || response.data;
 };
 
 // Obtener adopciones de un animal concreto
@@ -17,8 +21,22 @@ const getAdopcionesPorAnimal = async (animalId) => {
 };
 
 // Obtener adopciones de un usuario concreto
+// Si el backend no respeta filtro de query, aplicamos filtro en frontend
 const getAdopcionesPorUsuario = async (usuarioId) => {
-  return getAdopciones({ usuario: usuarioId });
+  try {
+    // Intentamos filtro por query param 'usuario'
+    let ads = await getAdopciones({ usuario: usuarioId });
+    // Si la API devuelve todas las adopciones (sin filtrar)
+    if (Array.isArray(ads) && ads.some(a => a.usuario && ![usuarioId].includes(a.usuario))) {
+      ads = await getAdopciones();
+      return ads.filter(a => a.usuario === usuarioId);
+    }
+    return ads;
+  } catch (error) {
+    // Fallback: obtener todas y filtrar
+    const all = await getAdopciones();
+    return all.filter(a => a.usuario === usuarioId);
+  }
 };
 
 // Crear una nueva adopción (incluye subida de PDF)

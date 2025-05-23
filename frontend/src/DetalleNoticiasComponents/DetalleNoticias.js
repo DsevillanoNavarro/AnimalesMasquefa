@@ -34,7 +34,9 @@ const DetalleNoticias = () => {
     setComentariosLoading(true);
     comentarioService
       .getComentariosPorNoticia(id)
-      .then((res) => setComentarios(res.data))
+      .then((comments) => {
+        setComentarios(Array.isArray(comments) ? comments : []);
+      })
       .catch((err) => {
         console.error(err);
         setComentarioError("Error al cargar comentarios");
@@ -51,12 +53,11 @@ const DetalleNoticias = () => {
     setComentarioError(null);
 
     try {
-      const response = await comentarioService.crearComentario({
+      const newComment = await comentarioService.crearComentario({
         noticia: id,
         contenido: nuevoComentario.trim(),
       });
-      // Añadir comentario nuevo al listado (al principio)
-      setComentarios((prev) => [response.data, ...prev]);
+      setComentarios((prev = []) => [newComment, ...prev]);
       setNuevoComentario("");
     } catch (error) {
       console.error(error);

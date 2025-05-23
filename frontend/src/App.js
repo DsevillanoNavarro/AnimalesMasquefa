@@ -20,14 +20,14 @@ import DetalleNoticias from "./pages/DetalleNoticias";
 import Perfil from "./pages/Perfil";
 import Adoptar from "./pages/Adoptar";
 import AdopcionEnviada from "./pages/AdopcionEnviada";
-
+import ResetPassword from "./pages/ResetPassword";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-
-import { LoadingProvider, useLoading } from './contexts/LoadingContext';
+import ScrollToTop from './contexts/ScrollToTop';
+import { useLoading } from './contexts/LoadingContext';
 import GlobalLoader from './LoadingComponents/GlobalLoader';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { api } from './services/loginService';
+import ForgotPassword from './pages/ForgotPassword';
 // Guard para rutas privadas
 function RequireAuth() {
   const [allowed, setAllowed] = React.useState(null);
@@ -36,7 +36,7 @@ function RequireAuth() {
     (async () => {
       try {
         // Intentamos refrescar el token usando la cookie
-        await api.post('/api/token/refresh/');
+        await api.post('/token/refresh/');
         setAllowed(true);
       } catch {
         setAllowed(false);
@@ -71,6 +71,7 @@ function AppContent() {
       <div className="d-flex flex-column min-vh-100">
         <Navbar />
         <main className="flex-grow-1">
+        <ScrollToTop />
           <Routes>
             {/* Rutas públicas */}
             <Route path="/" element={<Home />} />
@@ -83,7 +84,8 @@ function AppContent() {
             <Route path="/registro" element={<Registro />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
+            <Route path="/resetPassword/:uidb64/:token" element={<ResetPassword />} />
             {/* Agrupamos rutas protegidas bajo el guard */}
             <Route element={<RequireAuth />}>
               <Route path="/perfil" element={<Perfil />} />
@@ -92,6 +94,7 @@ function AppContent() {
               <Route path="/listadoNoticias" element={<ListadoNoticias />} />
               <Route path="/adoptar/:id" element={<Adoptar />} />
               <Route path="/adopcionEnviada" element={<AdopcionEnviada />} />
+              
             </Route>
 
             {/* Catch-all */}
