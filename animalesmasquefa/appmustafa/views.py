@@ -3,7 +3,6 @@ from .models import Animal, Noticia, Comentario, Adopcion
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .serializers import AnimalSerializer, UsuarioSerializer, NoticiaSerializer, ComentarioSerializer, AdopcionSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
-from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework import permissions
@@ -21,6 +20,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str  # force_str para decode en Django 4+
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class AnimalViewSet(viewsets.ModelViewSet):
     queryset = Animal.objects.all()

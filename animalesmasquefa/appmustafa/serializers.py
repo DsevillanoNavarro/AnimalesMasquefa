@@ -8,6 +8,8 @@ from django.utils.html import format_html
 from rest_framework import generics
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,7 +40,7 @@ class AdopcionSerializer(serializers.ModelSerializer):
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password', 'foto_perfil', 'recibir_novedades']
         extra_kwargs = {
             'password': {'write_only': True}
         }

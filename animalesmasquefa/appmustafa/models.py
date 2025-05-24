@@ -1,11 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import date
 from django.core.exceptions import ValidationError
 from auditlog.registry import auditlog
-
-
+from django.contrib.auth.models import AbstractUser  # ✅ esto sí debe quedarse
+from django.conf import settings  # ✅ para ForeignKey con AUTH_USER_MODEL
 
 class Animal(models.Model):
     nombre = models.CharField(max_length=50)
@@ -51,7 +50,7 @@ class Noticia(models.Model):
 
 class Comentario(models.Model):
     noticia = models.ForeignKey(Noticia, on_delete=models.CASCADE, related_name="comentarios")
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comentarios")
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comentarios")
     contenido = models.TextField(max_length=1000)
     fecha_hora = models.DateTimeField(auto_now_add=True)
 
@@ -95,7 +94,7 @@ class Adopcion(models.Model):
     ]
 
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name="adopciones")
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="adopciones")
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="adopciones")
     fecha_hora = models.DateTimeField(auto_now_add=True)
     aceptada = models.CharField(max_length=10, choices=ESTADOS_ADOPCION, default='Pendiente')
     contenido = models.FileField(upload_to=pdf_upload_path, validators=[validate_pdf])
@@ -107,6 +106,13 @@ class Adopcion(models.Model):
     def __str__(self):
         return self.animal.nombre
 
+
+class CustomUser(AbstractUser):
+    foto_perfil = models.ImageField(upload_to='usuarios/perfiles/', null=True, blank=True)
+    recibir_novedades = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username
 
 # ——— Después de definir **todas** tus clases, las registras: ———
 auditlog.register(Animal)

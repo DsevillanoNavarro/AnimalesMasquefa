@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
+
+AUTH_USER_MODEL = 'appmustafa.CustomUser'
 JET_INDEX_DASHBOARD = 'animalesmasquefa.dashboard.CustomIndexDashboard'
 
 CORS_ALLOW_CREDENTIALS = True
