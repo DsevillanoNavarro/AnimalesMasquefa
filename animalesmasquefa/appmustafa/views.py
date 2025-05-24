@@ -156,7 +156,7 @@ class RequestPasswordResetAPIView(generics.GenericAPIView):
         token = token_generator.make_token(user)
 
         frontend_url = settings.FRONTEND_URL.rstrip('/')
-        reset_link = f"{frontend_url}/reset-password/{uidb64}/{token}/"
+        reset_link = f"{frontend_url}/resetPassword/{uidb64}/{token}/"
 
         send_mail(
             subject="Recupera tu contraseña",

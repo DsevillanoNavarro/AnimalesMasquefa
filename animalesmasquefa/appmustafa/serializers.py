@@ -18,12 +18,17 @@ class NoticiaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ComentarioSerializer(serializers.ModelSerializer):
-    usuario = serializers.StringRelatedField(read_only=True)
-    tiempo_transcurrido = serializers.SerializerMethodField()
-
+    respuestas = serializers.SerializerMethodField()
+    
     class Meta:
         model = Comentario
-        fields = ['id', 'noticia', 'usuario', 'contenido', 'fecha_hora', 'tiempo_transcurrido']
+        fields = ['id', 'noticia', 'usuario', 'contenido', 'fecha_hora', 'parent', 'respuestas']
+
+    def get_respuestas(self, obj):
+        if obj.respuestas.exists():
+            return ComentarioSerializer(obj.respuestas.all().order_by('fecha_hora'), many=True).data
+        return []
+
 
     def get_tiempo_transcurrido(self, obj):
         return obj.tiempo_transcurrido()

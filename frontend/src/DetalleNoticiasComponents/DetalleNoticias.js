@@ -17,8 +17,9 @@ const DetalleNoticias = () => {
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [comentariosLoading, setComentariosLoading] = useState(false);
   const [comentarioError, setComentarioError] = useState(null);
+  const [responderA, setResponderA] = useState(null);
+  const [respuestaTexto, setRespuestaTexto] = useState("");
 
-  // Cargar noticia
   useEffect(() => {
     setLoading(true);
     noticiaService
@@ -28,7 +29,6 @@ const DetalleNoticias = () => {
       .finally(() => setLoading(false));
   }, [id, setLoading]);
 
-  // Cargar comentarios
   useEffect(() => {
     if (!id) return;
     setComentariosLoading(true);
@@ -55,9 +55,9 @@ const DetalleNoticias = () => {
     try {
       const newComment = await comentarioService.crearComentario({
         noticia: id,
-        contenido: nuevoComentario.trim(),
+        contenido: nuevoComentario.trim(), // ✅ CAMBIO AQUÍ
       });
-      setComentarios((prev = []) => [newComment, ...prev]);
+      setComentarios((prev) => [newComment, ...prev]);
       setNuevoComentario("");
     } catch (error) {
       console.error(error);
@@ -65,8 +65,74 @@ const DetalleNoticias = () => {
     }
   };
 
-  if (loading) return null;
-  if (!noticia) return <p className="loading">Noticia no encontrada</p>;
+  const handleResponder = async (parentId) => {
+    if (!respuestaTexto.trim()) return;
+    try {
+      const newReply = await comentarioService.crearComentario({
+        noticia: id,
+        contenido: respuestaTexto.trim(), // ✅ CAMBIO AQUÍ
+        parent: parentId,
+      });
+      
+      setComentarios((prev) => [...prev, newReply]);
+      setRespuestaTexto("");
+      setResponderA(null);
+    } catch (err) {
+      console.error("Error al responder comentario", err);
+      setComentarioError("Error al responder comentario");
+    }
+  };
+
+  const renderComentarios = (lista, parentId = null, nivel = 0) =>
+    lista
+      .filter((c) => c.parent === parentId)
+      .sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora))
+      .map((comentario) => (
+        <div
+          key={comentario.id}
+          className="mb-3 pb-2"
+          style={{ marginLeft: nivel * 20 }}
+        >
+          <div className="border-start ps-3">
+            <strong>{comentario.usuario}</strong>{" "}
+            <small className="text-muted">
+              - {new Date(comentario.fecha_hora).toLocaleString()}
+            </small>
+            <p>{comentario.contenido}</p>
+            {isAuthenticated && (
+              <button
+                className="btn btn-sm btn-outline-secondary mb-2"
+                onClick={() =>
+                  setResponderA(responderA === comentario.id ? null : comentario.id)
+                }
+              >
+                {responderA === comentario.id ? "Cancelar" : "Responder"}
+              </button>
+            )}
+            {responderA === comentario.id && (
+              <div className="mb-3">
+                <textarea
+                  className="form-control mb-2"
+                  placeholder="Escribe tu respuesta..."
+                  rows="2"
+                  value={respuestaTexto}
+                  onChange={(e) => setRespuestaTexto(e.target.value)}
+                />
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={() => handleResponder(comentario.id)}
+                >
+                  Enviar respuesta
+                </button>
+              </div>
+            )}
+            {/* Renderiza respuestas recursivamente */}
+            {renderComentarios(lista, comentario.id, nivel + 1)}
+          </div>
+        </div>
+      ));
+
+  if (!noticia) return null;
 
   return (
     <div className="container NoticiaDetail mt-5 pt-5 slide-down-fade">
@@ -106,7 +172,10 @@ const DetalleNoticias = () => {
               value={nuevoComentario}
               onChange={(e) => setNuevoComentario(e.target.value)}
             />
-            <button className="btn btn-primary mb-3" onClick={handlePublicarComentario}>
+            <button
+              className="btn btn-primary mb-3"
+              onClick={handlePublicarComentario}
+            >
               Publicar
             </button>
             {comentarioError && (
@@ -117,15 +186,7 @@ const DetalleNoticias = () => {
             ) : comentarios.length === 0 ? (
               <p>No hay comentarios aún.</p>
             ) : (
-              comentarios.map((comentario) => (
-                <div key={comentario.id} className="mb-3 border-bottom pb-2">
-                  <strong>{comentario.usuario}</strong>{" "}
-                  <small className="text-muted">
-                    - {comentario.tiempo_transcurrido}
-                  </small>
-                  <p>{comentario.contenido}</p>
-                </div>
-              ))
+              renderComentarios(comentarios)
             )}
           </>
         ) : (

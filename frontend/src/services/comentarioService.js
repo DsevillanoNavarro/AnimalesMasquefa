@@ -47,18 +47,10 @@ const getComentariosPorUsuario = async () => {
  * Obtener comentarios de una noticia concreta
  */
 const getComentariosPorNoticia = async (noticiaId) => {
-  try {
-    let comments = await getComentarios({ noticia: noticiaId });
-    if (comments.some(c => c.noticia !== noticiaId)) {
-      const all = await getComentarios();
-      return all.filter(c => c.noticia === noticiaId);
-    }
-    return comments;
-  } catch {
-    const all = await getComentarios();
-    return all.filter(c => c.noticia === noticiaId);
-  }
+  const all = await getComentarios();
+  return all.filter(c => String(c.noticia) === String(noticiaId));
 };
+
 
 /**
  * Crear un nuevo comentario

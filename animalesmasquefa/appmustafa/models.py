@@ -53,13 +53,15 @@ class Comentario(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comentarios")
     contenido = models.TextField(max_length=1000)
     fecha_hora = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='respuestas')
+
 
     class Meta:
         verbose_name = 'Comentario'
         verbose_name_plural = 'Comentarios'
 
     def __str__(self):
-        return self.contenido[:50]
+        return f'{self.usuario.username} - {self.contenido[:20]}'
 
     def tiempo_transcurrido(self):
         delta = timezone.now() - self.fecha_hora
