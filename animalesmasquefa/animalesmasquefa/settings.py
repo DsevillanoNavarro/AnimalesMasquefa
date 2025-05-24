@@ -119,8 +119,8 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE    = "None"
+#SESSION_COOKIE_SAMESITE = "None"
+#CSRF_COOKIE_SAMESITE    = "None"
 JET_DASHBOARD_CACHE_TIMEOUT = 0
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
