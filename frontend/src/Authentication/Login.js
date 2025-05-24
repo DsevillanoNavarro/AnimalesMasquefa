@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
   const { login } = useAuth();
+  const navigate = useNavigate(); // 👈 Hook de navegación
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,6 +20,7 @@ const Login = () => {
     setError('');
     try {
       await login(form.username, form.password);
+      navigate('/perfil'); // ✅ Redirige tras login exitoso
     } catch (err) {
       setFailedAttempts(prev => prev + 1);
       const msg = err.response?.data?.detail || 'Error desconocido';
@@ -57,12 +59,16 @@ const Login = () => {
       {error && <p className="login-error">{error}</p>}
 
       <div className="login-links">
-      <p>
-        <Link to="/forgotPassword" className="login-link">
-          ¿Se te ha olvidado tu contraseña?
-        </Link>
-      </p>
-        <p> <Link to="/Registro" className="login-link">¿No tienes una cuenta? Regístrate aquí</Link></p>
+        <p>
+          <Link to="/forgotPassword" className="login-link">
+            ¿Se te ha olvidado tu contraseña?
+          </Link>
+        </p>
+        <p>
+          <Link to="/Registro" className="login-link">
+            ¿No tienes una cuenta? Regístrate aquí
+          </Link>
+        </p>
       </div>
     </form>
   );

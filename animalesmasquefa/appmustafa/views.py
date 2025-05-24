@@ -191,3 +191,10 @@ class PasswordResetConfirmAPIView(generics.GenericAPIView):
         user.set_password(new_password)
         user.save()
         return Response({"detail": "Contraseña restablecida con éxito."}, status=200)
+    
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response({"message": "Logged out"})
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response

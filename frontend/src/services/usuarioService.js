@@ -20,6 +20,7 @@ const createUsuario = (usuarioData) => {
   formData.append('last_name', usuarioData.get('last_name'));
   formData.append('email', usuarioData.get('email'));
   formData.append('password', usuarioData.get('password'));
+  formData.append('recibir_novedades', usuarioData.get('recibir_novedades') === 'true' || usuarioData.get('recibir_novedades') === true ? 'true' : 'false');
 
   return axios.post(API_URL, formData);
 };
@@ -35,6 +36,8 @@ const updateUsuario = (id, usuarioData) => {
   if (usuarioData.get('password')) {
     formData.append('password', usuarioData.get('password'));
   }
+
+  formData.append('recibir_novedades', usuarioData.get('recibir_novedades') === 'true' || usuarioData.get('recibir_novedades') === true ? 'true' : 'false');
 
   return axios.put(`${API_URL}${id}/`, formData, {
     headers: {

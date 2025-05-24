@@ -7,9 +7,11 @@ import animalService from '../services/animalService';
 import Modal from './Modal';
 import './Perfil.css';
 import { Pencil, Trash } from 'react-bootstrap-icons';
+import { useAuth } from '../contexts/AuthContext'; // 👈 importamos logout
 
 export default function Profile() {
   const { user, loading, error } = useCurrentUser();
+  const { logout } = useAuth(); // 👈 usamos logout
   const [activeTab, setActiveTab] = useState('adopciones');
   const [adopciones, setAdopciones] = useState([]);
   const [comentarios, setComentarios] = useState([]);
@@ -82,25 +84,32 @@ export default function Profile() {
   return (
     <div className="profile-container profile">
       <h1>Mi Perfil</h1>
+
       {/* Info usuario */}
       <div className="profile-info">
         <p><strong>Usuario:</strong> {user.username}</p>
         <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
         <p><strong>Email:</strong> {user.email}</p>
+
+        {/* Botón de logout */}
+        <button className="custom-btn logout" onClick={logout}>
+          Cerrar sesión
+        </button>
       </div>
-      
+
       {/* Tabs */}
       <div className="profile-tabs">
-        {['adopciones','comentarios'].map(tab => (
+        {['adopciones', 'comentarios'].map(tab => (
           <button
             key={tab}
-            className={activeTab===tab ? 'profile-tab-active' : 'profile-tab'}
+            className={activeTab === tab ? 'profile-tab-active' : 'profile-tab'}
             onClick={() => setActiveTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>
+
       {/* Contenido pestaña */}
       <div className="profile-tab-content">
         {loadingData && <p>Cargando datos…</p>}
@@ -109,7 +118,7 @@ export default function Profile() {
           <div className="profile-card-grid">
             {adopciones.map(a => (
               <div key={a.id} className="profile-card">
-                <img src={a.animal?.imagen || ''} alt={a.animal?.nombre} className="profile-card-img"/>
+                <img src={a.animal?.imagen || ''} alt={a.animal?.nombre} className="profile-card-img" />
                 <div className="profile-card-body">
                   <h3>{a.animal?.nombre || '—'}</h3>
                   <p>Estado: <span>{a.aceptada}</span></p>
