@@ -46,6 +46,9 @@ class ComentarioSerializer(serializers.ModelSerializer):
         if obj.respuestas.exists():
             return ComentarioSerializer(obj.respuestas.all().order_by('fecha_hora'), many=True).data
         return []
+    
+    def get_usuario(self, obj):
+        return obj.usuario.username
 
 
 class AdopcionSerializer(serializers.ModelSerializer):
