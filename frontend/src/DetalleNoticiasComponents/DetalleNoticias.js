@@ -111,51 +111,73 @@ const DetalleNoticias = () => {
   const renderComentarios = (lista, parentId = null, nivel = 0) =>
     lista
       .filter((c) => c.parent === parentId)
-      .sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora))
-      .slice(0, comentariosVisibles) // paginación
       .map((comentario) => (
         <div
           key={comentario.id}
           className="mb-3 pb-2"
           style={{ marginLeft: nivel * 20 }}
         >
-          <div className="border-start ps-3">
-            <strong>{comentario.usuario}</strong>{" "}
-            <small className="text-muted">
-              - {new Date(comentario.fecha_hora).toLocaleString()}
-            </small>
-            <p>{comentario.contenido}</p>
-            {isAuthenticated && (
-              <button
-                className="btn btn-sm btn-outline-secondary mb-2"
-                onClick={() =>
-                  setResponderA(responderA === comentario.id ? null : comentario.id)
-                }
-              >
-                {responderA === comentario.id ? "Cancelar" : "Responder"}
-              </button>
+          <div className="border-start ps-3 d-flex align-items-start gap-2">
+            {comentario.usuario_foto ? (
+              <img
+                src={comentario.usuario_foto}
+                alt={comentario.usuario_username}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  backgroundColor: "#ccc",
+                }}
+              />
             )}
-            {responderA === comentario.id && (
-              <div className="mb-3">
-                <textarea
-                  className="form-control mb-2"
-                  placeholder="Escribe tu respuesta..."
-                  rows="2"
-                  value={respuestaTexto}
-                  onChange={(e) => setRespuestaTexto(e.target.value)}
-                />
+            <div>
+              <strong>{comentario.usuario_username}</strong>{" "}
+              <small className="text-muted">
+                - {new Date(comentario.fecha_hora).toLocaleString()}
+              </small>
+              <p>{comentario.contenido}</p>
+              {isAuthenticated && (
                 <button
-                  className="btn btn-sm btn-primary"
-                  onClick={() => handleResponder(comentario.id)}
+                  className="btn btn-sm btn-outline-secondary mb-2"
+                  onClick={() =>
+                    setResponderA(responderA === comentario.id ? null : comentario.id)
+                  }
                 >
-                  Enviar respuesta
+                  {responderA === comentario.id ? "Cancelar" : "Responder"}
                 </button>
-              </div>
-            )}
-            {renderComentarios(lista, comentario.id, nivel + 1)}
+              )}
+              {responderA === comentario.id && (
+                <div className="mb-3">
+                  <textarea
+                    className="form-control mb-2"
+                    placeholder="Escribe tu respuesta..."
+                    rows="2"
+                    value={respuestaTexto}
+                    onChange={(e) => setRespuestaTexto(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => handleResponder(comentario.id)}
+                  >
+                    Enviar respuesta
+                  </button>
+                </div>
+              )}
+              {renderComentarios(lista, comentario.id, nivel + 1)}
+            </div>
           </div>
         </div>
       ));
+  
 
   if (!noticia) return null;
 

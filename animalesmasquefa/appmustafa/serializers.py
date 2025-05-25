@@ -18,27 +18,42 @@ class NoticiaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 MAX_NIVEL_RESPUESTA = 5  # Nivel máximo permitido
+from rest_framework import serializers
+from .models import Comentario
+
+MAX_NIVEL_RESPUESTA = 3  # Ajusta según tu lógica
 
 class ComentarioSerializer(serializers.ModelSerializer):
     respuestas = serializers.SerializerMethodField()
-    
+    usuario_username = serializers.SerializerMethodField()
+    usuario_foto = serializers.SerializerMethodField()
+
     class Meta:
         model = Comentario
-        fields = ['id', 'noticia', 'usuario', 'contenido', 'fecha_hora', 'parent', 'respuestas']
+        fields = [
+            'id',
+            'noticia',
+            'usuario',
+            'contenido',
+            'fecha_hora',
+            'parent',
+            'respuestas',
+            'usuario_username',
+            'usuario_foto'
+        ]
         read_only_fields = ['usuario']
 
     def validate(self, data):
         parent = data.get('parent')
         nivel = 1
 
-        # Recorremos hacia arriba contando niveles
         while parent:
             nivel += 1
             if nivel > MAX_NIVEL_RESPUESTA:
                 raise serializers.ValidationError(
                     f"No se permite responder más allá del nivel {MAX_NIVEL_RESPUESTA}."
                 )
-            parent = parent.parent  # Saltamos al siguiente ancestro
+            parent = parent.parent
 
         return data
 
@@ -46,9 +61,16 @@ class ComentarioSerializer(serializers.ModelSerializer):
         if obj.respuestas.exists():
             return ComentarioSerializer(obj.respuestas.all().order_by('fecha_hora'), many=True).data
         return []
-    
-    def get_usuario(self, obj):
+
+    def get_usuario_username(self, obj):
         return obj.usuario.username
+
+    def get_usuario_foto(self, obj):
+        if hasattr(obj.usuario, 'foto_perfil') and obj.usuario.foto_perfil:
+            return obj.usuario.foto_perfil.url
+        return None
+
+
 
 
 class AdopcionSerializer(serializers.ModelSerializer):
