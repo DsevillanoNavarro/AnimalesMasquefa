@@ -14,6 +14,7 @@ const DetalleNoticias = () => {
 
   const [noticia, setNoticia] = useState(null);
   const [comentarios, setComentarios] = useState([]);
+  const [comentariosVisibles, setComentariosVisibles] = useState(5); // paginación
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [comentariosLoading, setComentariosLoading] = useState(false);
   const [comentarioError, setComentarioError] = useState(null);
@@ -67,10 +68,12 @@ const DetalleNoticias = () => {
     } catch (error) {
       console.error("Error al publicar comentario:", error.response?.data || error.message);
       const mensaje =
-        error.response?.data?.non_field_errors?.join(", ") ||
-        error.response?.data?.detail ||
-        JSON.stringify(error.response?.data) ||
-        "Error al publicar comentario";
+        error.response?.status === 429
+          ? "Debes esperar 1 minuto entre comentarios."
+          : error.response?.data?.non_field_errors?.join(", ") ||
+            error.response?.data?.detail ||
+            JSON.stringify(error.response?.data) ||
+            "Error al publicar comentario";
       setComentarioError(mensaje);
     }
   };
@@ -95,10 +98,12 @@ const DetalleNoticias = () => {
     } catch (err) {
       console.error("Error al responder comentario:", err.response?.data || err.message);
       const mensaje =
-        err.response?.data?.non_field_errors?.join(", ") ||
-        err.response?.data?.detail ||
-        JSON.stringify(err.response?.data) ||
-        "Error al responder comentario";
+        err.response?.status === 429
+          ? "Debes esperar 1 minuto entre comentarios."
+          : err.response?.data?.non_field_errors?.join(", ") ||
+            err.response?.data?.detail ||
+            JSON.stringify(err.response?.data) ||
+            "Error al responder comentario";
       setComentarioError(mensaje);
     }
   };
@@ -107,6 +112,7 @@ const DetalleNoticias = () => {
     lista
       .filter((c) => c.parent === parentId)
       .sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora))
+      .slice(0, comentariosVisibles) // paginación
       .map((comentario) => (
         <div
           key={comentario.id}
@@ -205,7 +211,19 @@ const DetalleNoticias = () => {
             ) : comentarios.length === 0 ? (
               <p>No hay comentarios aún.</p>
             ) : (
-              renderComentarios(comentarios)
+              <>
+                {renderComentarios(comentarios)}
+                {comentariosVisibles < comentarios.length && (
+                  <div className="text-center mt-3">
+                    <button
+                      className="btn btn-outline-secondary"
+                      onClick={() => setComentariosVisibles((prev) => prev + 5)}
+                    >
+                      Ver más comentarios
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </>
         ) : (

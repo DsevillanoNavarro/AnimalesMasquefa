@@ -108,6 +108,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'appmustafa.authentication.CookieJWTAuthentication',
     ),
+        'DEFAULT_THROTTLE_RATES': {
+        'comentario_creacion': '1/min',
+    }
 }
 
 SIMPLE_JWT = {

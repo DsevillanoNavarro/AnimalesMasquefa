@@ -21,6 +21,7 @@ from django.utils.encoding import force_bytes, force_str  # force_str para decod
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from .throttles import CrearComentarioThrottle
 
 User = get_user_model()
 
@@ -37,6 +38,11 @@ class ComentarioViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get_throttles(self):
+        if self.request.method == 'POST':
+            return [CrearComentarioThrottle()]
+        return []  # sin throttling para GET
 
     def get_queryset(self):
         noticia_id = self.request.query_params.get('noticia')
