@@ -8,8 +8,8 @@ import "./DetalleNoticias.css";
 
 const DetalleNoticias = () => {
   const { id } = useParams();
-  const { loading, setLoading } = useLoading();
-  const { isAuthenticated } = useAuth();
+  const { setLoading } = useLoading();
+  const { isAuthenticated, token } = useAuth();
   const navigate = useNavigate();
 
   const [noticia, setNoticia] = useState(null);
@@ -17,6 +17,7 @@ const DetalleNoticias = () => {
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [comentariosLoading, setComentariosLoading] = useState(false);
   const [comentarioError, setComentarioError] = useState(null);
+  const [comentarioSuccess, setComentarioSuccess] = useState(null);
   const [responderA, setResponderA] = useState(null);
   const [respuestaTexto, setRespuestaTexto] = useState("");
 
@@ -51,35 +52,54 @@ const DetalleNoticias = () => {
   const handlePublicarComentario = async () => {
     if (!nuevoComentario.trim()) return;
     setComentarioError(null);
+    setComentarioSuccess(null);
 
     try {
-      const newComment = await comentarioService.crearComentario({
+      const comentarioData = {
         noticia: id,
-        contenido: nuevoComentario.trim(), // ✅ CAMBIO AQUÍ
-      });
+        contenido: nuevoComentario.trim(),
+      };
+
+      const newComment = await comentarioService.crearComentario(comentarioData, token);
       setComentarios((prev) => [newComment, ...prev]);
       setNuevoComentario("");
+      setComentarioSuccess("Comentario publicado correctamente.");
     } catch (error) {
-      console.error(error);
-      setComentarioError("Error al publicar comentario");
+      console.error("Error al publicar comentario:", error.response?.data || error.message);
+      const mensaje =
+        error.response?.data?.non_field_errors?.join(", ") ||
+        error.response?.data?.detail ||
+        JSON.stringify(error.response?.data) ||
+        "Error al publicar comentario";
+      setComentarioError(mensaje);
     }
   };
 
   const handleResponder = async (parentId) => {
     if (!respuestaTexto.trim()) return;
+    setComentarioError(null);
+    setComentarioSuccess(null);
+
     try {
-      const newReply = await comentarioService.crearComentario({
+      const comentarioData = {
         noticia: id,
-        contenido: respuestaTexto.trim(), // ✅ CAMBIO AQUÍ
+        contenido: respuestaTexto.trim(),
         parent: parentId,
-      });
-      
+      };
+
+      const newReply = await comentarioService.crearComentario(comentarioData, token);
       setComentarios((prev) => [...prev, newReply]);
       setRespuestaTexto("");
       setResponderA(null);
+      setComentarioSuccess("Respuesta publicada correctamente.");
     } catch (err) {
-      console.error("Error al responder comentario", err);
-      setComentarioError("Error al responder comentario");
+      console.error("Error al responder comentario:", err.response?.data || err.message);
+      const mensaje =
+        err.response?.data?.non_field_errors?.join(", ") ||
+        err.response?.data?.detail ||
+        JSON.stringify(err.response?.data) ||
+        "Error al responder comentario";
+      setComentarioError(mensaje);
     }
   };
 
@@ -126,7 +146,6 @@ const DetalleNoticias = () => {
                 </button>
               </div>
             )}
-            {/* Renderiza respuestas recursivamente */}
             {renderComentarios(lista, comentario.id, nivel + 1)}
           </div>
         </div>
@@ -137,7 +156,6 @@ const DetalleNoticias = () => {
   return (
     <div className="container NoticiaDetail mt-5 pt-5 slide-down-fade">
       <div className="row align-items-start">
-        {/* Imagen */}
         <div className="col-12 col-md-6 mb-4 mb-md-0">
           <img
             src={noticia.imagen}
@@ -146,7 +164,6 @@ const DetalleNoticias = () => {
           />
         </div>
 
-        {/* Texto */}
         <div className="col-12 col-md-6">
           <h1 className="detail-title">{noticia.titulo}</h1>
           <p className="detail-date">
@@ -160,9 +177,14 @@ const DetalleNoticias = () => {
         </div>
       </div>
 
-      {/* Comentarios */}
       <div className="comments-section mt-5">
         <h3>Comentarios</h3>
+        {comentarioSuccess && (
+          <div className="alert alert-success">{comentarioSuccess}</div>
+        )}
+        {comentarioError && (
+          <div className="alert alert-danger">{comentarioError}</div>
+        )}
         {isAuthenticated ? (
           <>
             <textarea
@@ -178,9 +200,6 @@ const DetalleNoticias = () => {
             >
               Publicar
             </button>
-            {comentarioError && (
-              <div className="alert alert-danger">{comentarioError}</div>
-            )}
             {comentariosLoading ? (
               <p>Cargando comentarios...</p>
             ) : comentarios.length === 0 ? (

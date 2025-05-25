@@ -55,9 +55,12 @@ const getComentariosPorNoticia = async (noticiaId) => {
 /**
  * Crear un nuevo comentario
  */
-const crearComentario = async (comentarioData) => {
+const crearComentario = async (comentarioData, token) => {
   const response = await axios.post(API_URL, comentarioData, {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,  // asegúrate de pasar el token aquí
+    },
     withCredentials: true,
   });
   return response.data;

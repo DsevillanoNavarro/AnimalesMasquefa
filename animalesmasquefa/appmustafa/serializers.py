@@ -17,21 +17,36 @@ class NoticiaSerializer(serializers.ModelSerializer):
         model = Noticia
         fields = '__all__'
 
+MAX_NIVEL_RESPUESTA = 5  # Nivel máximo permitido
+
 class ComentarioSerializer(serializers.ModelSerializer):
     respuestas = serializers.SerializerMethodField()
     
     class Meta:
         model = Comentario
         fields = ['id', 'noticia', 'usuario', 'contenido', 'fecha_hora', 'parent', 'respuestas']
+        read_only_fields = ['usuario']
+
+    def validate(self, data):
+        parent = data.get('parent')
+        nivel = 1
+
+        # Recorremos hacia arriba contando niveles
+        while parent:
+            nivel += 1
+            if nivel > MAX_NIVEL_RESPUESTA:
+                raise serializers.ValidationError(
+                    f"No se permite responder más allá del nivel {MAX_NIVEL_RESPUESTA}."
+                )
+            parent = parent.parent  # Saltamos al siguiente ancestro
+
+        return data
 
     def get_respuestas(self, obj):
         if obj.respuestas.exists():
             return ComentarioSerializer(obj.respuestas.all().order_by('fecha_hora'), many=True).data
         return []
 
-
-    def get_tiempo_transcurrido(self, obj):
-        return obj.tiempo_transcurrido()
 
 class AdopcionSerializer(serializers.ModelSerializer):
     class Meta:
