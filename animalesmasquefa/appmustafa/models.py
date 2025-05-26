@@ -114,9 +114,14 @@ class Adopcion(models.Model):
         return self.animal.nombre
     
     def clean(self):
+        # No permitir múltiples adopciones aceptadas para un animal
         if self.aceptada == 'Aceptada':
             if Adopcion.objects.filter(animal=self.animal, aceptada='Aceptada').exclude(id=self.id).exists():
                 raise ValidationError("Este animal ya fue adoptado.")
+
+        # No permitir más de una solicitud por el mismo usuario al mismo animal
+        if Adopcion.objects.filter(animal=self.animal, usuario=self.usuario).exclude(id=self.id).exists():
+            raise ValidationError("Ya has enviado una solicitud para adoptar a este animal.")
 
 
 class CustomUser(AbstractUser):

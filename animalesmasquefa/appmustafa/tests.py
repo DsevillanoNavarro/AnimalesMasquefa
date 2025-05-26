@@ -53,11 +53,8 @@ class AnimalesMasquefaTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_prevenir_adopcion_duplicada(self):
-        # Nota: actualmente no se previene adopción duplicada en la vista/modelo
-        # Por tanto, esperamos HTTP_201_CREATED en ambas llamadas
         existing_pdf = SimpleUploadedFile('old.pdf', b'%PDF-1.4 old', content_type='application/pdf')
         Adopcion.objects.create(animal=self.animal, usuario=self.user, contenido=existing_pdf)
-        url = reverse('adopcion-list')
         new_pdf = SimpleUploadedFile('new.pdf', b'%PDF-1.4 new', content_type='application/pdf')
         data = {
             'animal': self.animal.id,
@@ -65,7 +62,7 @@ class AnimalesMasquefaTests(APITestCase):
             'contenido': new_pdf
         }
         response = self.client.post(url, data, format='multipart', **self.auth_header)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)  # <--- CAMBIA ESTO
 
     def test_comentario_vacio_rechazado(self):
         url = reverse('comentario-list')
