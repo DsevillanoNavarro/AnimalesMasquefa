@@ -6,9 +6,11 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .models import Animal, Noticia
+from .models import Animal, Noticia, Adopcion
 from django.contrib.auth import get_user_model
 from email.mime.image import MIMEImage
+from django.core.mail import EmailMessage
+
 User = get_user_model()
 
 @receiver(post_save, sender=Adopcion)
@@ -141,3 +143,28 @@ def notificar_nueva_noticia(sender, instance, created, **kwargs):
             'noticia_url': f"{settings.FRONTEND_URL}/noticias/{instance.id}",
         }
         enviar_email_novedad(usuarios, "📰 Nueva noticia publicada", "email/nueva_noticia.html", contexto)
+        
+@receiver(post_save, sender=Adopcion)
+def notificar_adopcion_admin(sender, instance, created, **kwargs):
+    if created:
+        usuario = instance.usuario
+        animal = instance.animal
+        fecha = instance.fecha_hora.strftime("%d/%m/%Y %H:%M")
+
+        html_content = render_to_string("email/nueva_adopcion.html", {
+            "usuario": usuario,
+            "animal": animal,
+            "fecha": fecha
+        })
+        plain_text = strip_tags(html_content)
+
+        from django.core.mail import EmailMultiAlternatives
+
+        email = EmailMultiAlternatives(
+            subject="🐾 Nueva adopción registrada",
+            body=plain_text,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[settings.EMAIL_HOST_USER],
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)
