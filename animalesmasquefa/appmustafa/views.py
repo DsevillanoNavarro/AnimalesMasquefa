@@ -22,7 +22,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from .throttles import CrearComentarioThrottle
-from .throttles import UserRateThrottle
+from .throttles import UserRateThrottle, CrearAdopcionThrottle
+from rest_framework.exceptions import Throttled
 
 User = get_user_model()
 token_generator = PasswordResetTokenGenerator()
@@ -60,19 +61,27 @@ class AdopcionViewSet(viewsets.ModelViewSet):
     queryset = Adopcion.objects.all()
     serializer_class = AdopcionSerializer
 
-    def perform_create(self, serializer):
-        if serializer.validated_data.get('usuario') != self.request.user:
-            raise PermissionDenied("No puedes crear una adopción en nombre de otro usuario.")
-        serializer.save()
-        
     def get_throttles(self):
         if self.request.method == 'POST':
             return [CrearAdopcionThrottle()]
         return super().get_throttles()
 
-class AdopcionViewSet(viewsets.ModelViewSet):
-    queryset = Adopcion.objects.all()
-    serializer_class = AdopcionSerializer
+    def throttled(self, request, wait):
+        raise Throttled(detail={
+            'message': f'Has alcanzado el límite de solicitudes de adopción. Inténtalo de nuevo en {int(wait)} segundos.'
+        })
+
+    def perform_create(self, serializer):
+        animal = serializer.validated_data.get('animal')
+        usuario = self.request.user
+
+        if Adopcion.objects.filter(animal=animal, usuario=usuario).exists():
+            raise PermissionDenied("Ya has solicitado adoptar este animal antes.")
+
+        if serializer.validated_data.get('usuario') != usuario:
+            raise PermissionDenied("No puedes crear una adopción en nombre de otro usuario.")
+
+        serializer.save()
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

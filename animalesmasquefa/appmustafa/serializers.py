@@ -133,10 +133,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Este correo ya está registrado.")
         return value
     
-    def validate(self, data):
-        if Adopcion.objects.filter(animal=data['animal'], usuario=data['usuario'], aceptada='Pendiente').exists():
-            raise serializers.ValidationError("Ya has enviado una solicitud para este animal.")
-        return data
+    
     def validate_password(self, value):
         if len(value) < 8:
             raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
