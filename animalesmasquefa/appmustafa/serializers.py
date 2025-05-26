@@ -77,8 +77,11 @@ class ComentarioSerializer(serializers.ModelSerializer):
         return obj.usuario.username
 
     def get_usuario_foto(self, obj):
+        request = self.context.get('request')
         if hasattr(obj.usuario, 'foto_perfil') and obj.usuario.foto_perfil:
-            return obj.usuario.foto_perfil.url
+            if request:
+                return request.build_absolute_uri(obj.usuario.foto_perfil.url)
+            return obj.usuario.foto_perfil.url  # fallback por si no hay request
         return None
 
     def get_noticia_titulo(self, obj):

@@ -8,6 +8,7 @@ import Modal from './Modal';
 import './Perfil.css';
 import { Pencil, Trash } from 'react-bootstrap-icons';
 import { useAuth } from '../contexts/AuthContext'; // 👈 importamos logout
+import usuarioService from '../services/usuarioService';
 
 export default function Profile() {
   const { user, loading, error } = useCurrentUser();
@@ -45,9 +46,36 @@ export default function Profile() {
       .finally(() => setLoadingData(false));
   }, [user]);
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    if (!file.type.startsWith("image/")) {
+      alert("Solo se permiten imágenes.");
+      return;
+    }
+  
+    if (file.size > 5 * 1024 * 1024) {
+      alert("La imagen no puede pesar más de 5MB.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("foto_perfil", file);
+  
+    try {
+      await usuarioService.updateUsuario(user.id, formData);
+      alert("Imagen actualizada. Recargando perfil...");
+      window.location.reload();
+    } catch (err) {
+      console.error("Error al actualizar la imagen:", err);
+      alert("Error al subir la imagen.");
+    }
+  };
+  
   const openModal = (type, item) => setModalConfig({ isOpen: true, type, item });
   const closeModal = () => setModalConfig({ isOpen: false, type: null, item: null });
-
+  
   const handleModalSave = (type, item, form) => {
     if (type === 'editAdopcion') {
       const formData = new FormData();
@@ -86,28 +114,48 @@ export default function Profile() {
       <h1>Mi Perfil</h1>
 
       {/* Info usuario */}
-      <div className="profile-info">
-        <p><strong>Usuario:</strong> {user.username}</p>
-        <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
-        <p><strong>Email:</strong> {user.email}</p>
+      <div className="profile-info-row">
+          <div className="profile-picture-container">
+            <label htmlFor="foto_perfil" className="profile-picture-label">
+              <img
+                src={`${process.env.REACT_APP_BACK_URL}${user.foto_perfil}`}
+                alt="Foto de perfil"
+                className="profile-picture-img"
+              />
+              <div className="profile-picture-overlay">Editar</div>
+            </label>
+            <input
+              type="file"
+              id="foto_perfil"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="profile-picture-input"
+            />
+          </div>
 
-        {/* Botón de logout */}
-        <div className="d-flex flex-column flex-md-row gap-3 mt-3">
-          <button className="custom-btn logout" onClick={logout}>
-            Cerrar sesión
-          </button>
-          {user.is_staff && (
-            <a
-              href={`${process.env.REACT_APP_BACK_URL}/admin/`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="custom-btn admin"
-            >
-              Panel de administración
-            </a>
-          )}
+          <div className="profile-user-data">
+            <p><strong>Usuario:</strong> {user.username}</p>
+            <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+
+            
+          </div>
         </div>
-      </div>
+        <div className="d-flex flex-column flex-md-row gap-3 mt-3">
+              <button className="custom-btn logout" onClick={logout}>
+                Cerrar sesión
+              </button>
+              {user.is_staff && (
+                <a
+                  href={`${process.env.REACT_APP_BACK_URL}/admin/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="custom-btn admin"
+                >
+                  Panel de administración
+                </a>
+              )}
+            </div>
 
       {/* Tabs */}
       <div className="profile-tabs">
