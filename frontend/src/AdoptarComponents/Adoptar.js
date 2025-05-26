@@ -68,8 +68,9 @@ const Adoptar = () => {
       navigate("/adopcionEnviada", { state: { animal } });
     } catch (err) {
       console.error(err);
-      setError("Error al enviar solicitud.");
-    } finally {
+      const backendMessage = err.response?.data?.error || err.response?.data?.message || "Error al enviar solicitud.";
+      setError(backendMessage);
+  } finally {
       setSubmitting(false);
     }
   };

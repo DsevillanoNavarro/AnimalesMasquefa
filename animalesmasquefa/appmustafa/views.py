@@ -67,9 +67,21 @@ class AdopcionViewSet(viewsets.ModelViewSet):
         return super().get_throttles()
 
     def throttled(self, request, wait):
+        hours = wait // 3600
+        minutes = (wait % 3600) // 60
+        seconds = int(wait % 60)
+
+        if hours > 0:
+            time_str = f"{int(hours)}h {int(minutes)}min"
+        elif minutes > 0:
+            time_str = f"{int(minutes)}min {int(seconds)}s"
+        else:
+            time_str = f"{seconds}s"
+
         raise Throttled(detail={
-            'message': f'Has alcanzado el límite de solicitudes de adopción. Inténtalo de nuevo en {int(wait)} segundos.'
+            'message': f'Has alcanzado el límite de solicitudes de adopción. Inténtalo de nuevo en {time_str}.'
         })
+
 
     def perform_create(self, serializer):
         animal = serializer.validated_data.get('animal')
