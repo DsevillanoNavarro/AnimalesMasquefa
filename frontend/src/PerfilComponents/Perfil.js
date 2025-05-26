@@ -92,9 +92,21 @@ export default function Profile() {
         <p><strong>Email:</strong> {user.email}</p>
 
         {/* Botón de logout */}
-        <button className="custom-btn logout" onClick={logout}>
-          Cerrar sesión
-        </button>
+        <div className="d-flex flex-column flex-md-row gap-3 mt-3">
+          <button className="custom-btn logout" onClick={logout}>
+            Cerrar sesión
+          </button>
+          {user.is_staff && (
+            <a
+              href={`${process.env.REACT_APP_BACK_URL}/admin/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="custom-btn admin"
+            >
+              Panel de administración
+            </a>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}

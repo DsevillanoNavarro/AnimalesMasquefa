@@ -58,6 +58,10 @@ class AdopcionViewSet(viewsets.ModelViewSet):
     queryset = Adopcion.objects.all()
     serializer_class = AdopcionSerializer
 
+    def perform_create(self, serializer):
+        if serializer.validated_data.get('usuario') != self.request.user:
+            raise PermissionDenied("No puedes crear una adopción en nombre de otro usuario.")
+        serializer.save()
 
 class AdopcionViewSet(viewsets.ModelViewSet):
     queryset = Adopcion.objects.all()

@@ -20,6 +20,10 @@ class Animal(models.Model):
     def __str__(self):
         return self.nombre
 
+    def clean(self):
+        if self.fecha_nacimiento > date.today():
+            raise ValidationError("La fecha de nacimiento no puede ser en el futuro.")
+    
     def calcular_edad(self):
         if self.fecha_nacimiento:
             today = date.today()
@@ -32,6 +36,7 @@ class Animal(models.Model):
     def save(self, *args, **kwargs):
         self.edad = self.calcular_edad()
         super().save(*args, **kwargs)
+        
 
 
 class Noticia(models.Model):
@@ -107,6 +112,11 @@ class Adopcion(models.Model):
 
     def __str__(self):
         return self.animal.nombre
+    
+    def clean(self):
+        if self.aceptada == 'Aceptada':
+            if Adopcion.objects.filter(animal=self.animal, aceptada='Aceptada').exclude(id=self.id).exists():
+                raise ValidationError("Este animal ya fue adoptado.")
 
 
 class CustomUser(AbstractUser):

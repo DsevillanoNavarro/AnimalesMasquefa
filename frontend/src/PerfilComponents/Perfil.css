@@ -25,20 +25,14 @@
   background-color: #c0392b !important;
 }
 
-
-.boton-admin {
-  display: inline-block;
-  background-color: #4170E8;
-  color: white;
-  padding: 10px 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.3s;
+.custom-btn.admin {
+  background-color: #4170E8 !important;
+  padding: 5px 10px !important;
+  text-decoration: none !important;
 }
-.boton-admin:hover {
-  background-color: #305bb2;
+
+.custom-btn.admin:hover {
+  background-color: #000000 !important;
 }
 
 

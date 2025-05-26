@@ -11,6 +11,11 @@ class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
         fields = '__all__'
+        
+    def validate_nombre(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("El nombre no puede estar vacío.")
+        return value
 
 class NoticiaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,19 +32,25 @@ class ComentarioSerializer(serializers.ModelSerializer):
     respuestas = serializers.SerializerMethodField()
     usuario_username = serializers.SerializerMethodField()
     usuario_foto = serializers.SerializerMethodField()
+    noticia_titulo = serializers.SerializerMethodField()
+    parent_contenido = serializers.SerializerMethodField()
+    noticia_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Comentario
         fields = [
             'id',
             'noticia',
+            'noticia_titulo',
             'usuario',
+            'usuario_username',
+            'usuario_foto',
             'contenido',
             'fecha_hora',
             'parent',
+            'parent_contenido',
             'respuestas',
-            'usuario_username',
-            'usuario_foto'
+            'noticia_id'
         ]
         read_only_fields = ['usuario']
 
@@ -70,7 +81,19 @@ class ComentarioSerializer(serializers.ModelSerializer):
             return obj.usuario.foto_perfil.url
         return None
 
+    def get_noticia_titulo(self, obj):
+        return obj.noticia.titulo if obj.noticia else None
 
+    def get_parent_contenido(self, obj):
+        return obj.parent.contenido if obj.parent else None
+    
+    def get_noticia_id(self, obj):
+        return obj.noticia.id if obj.noticia else None
+    
+    def validate_contenido(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("El comentario no puede estar vacío.")
+        return value
 
 
 class AdopcionSerializer(serializers.ModelSerializer):
@@ -83,7 +106,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name', 
-            'password', 'foto_perfil', 'recibir_novedades'
+            'password', 'foto_perfil', 'recibir_novedades', 'is_staff'
         ]
         extra_kwargs = {
             'password': {'write_only': True},
@@ -100,6 +123,11 @@ class UsuarioSerializer(serializers.ModelSerializer):
         if self.Meta.model.objects.filter(email=value).exists():
             raise serializers.ValidationError("Este correo ya está registrado.")
         return value
+    
+    def validate(self, data):
+        if Adopcion.objects.filter(animal=data['animal'], usuario=data['usuario'], aceptada='Pendiente').exists():
+            raise serializers.ValidationError("Ya has enviado una solicitud para este animal.")
+        return data
 
     def create(self, validated_data):
         password = validated_data.pop('password')
