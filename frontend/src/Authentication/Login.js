@@ -16,6 +16,14 @@ const Login = () => {
   };
 
   const handleSubmit = async e => {
+    if (!form.username.trim() || form.username.length < 3) {
+      alert("El usuario debe tener al menos 3 caracteres.");
+      return;
+    }
+    if (!form.password || form.password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
     e.preventDefault();
     setError('');
     try {
@@ -26,6 +34,7 @@ const Login = () => {
       const msg = err.response?.data?.detail || 'Error desconocido';
       setError(msg);
     }
+    
   };
 
   return (

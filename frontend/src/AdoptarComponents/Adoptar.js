@@ -38,8 +38,18 @@ const Adoptar = () => {
   };
 
   const handleSubmit = async () => {
+
+
     if (!pdfFile) {
-      setError("Selecciona un PDF con tu solicitud.");
+      setError("Debes subir el documento en PDF.");
+      return;
+    }
+    if (pdfFile.type !== "application/pdf") {
+      setError("El archivo debe ser un PDF válido.");
+      return;
+    }
+    if (pdfFile.size > 2 * 1024 * 1024) {
+      setError("El archivo PDF no debe superar los 2MB.");
       return;
     }
     if (!user) {

@@ -51,10 +51,18 @@ const DetalleNoticias = () => {
   };
 
   const handlePublicarComentario = async () => {
+
+    if (!nuevoComentario.trim() || nuevoComentario.length < 5) {
+      setComentarioError("El comentario debe tener al menos 5 caracteres.");
+      return;
+    }
+    
     if (!nuevoComentario.trim()) return;
     setComentarioError(null);
     setComentarioSuccess(null);
-
+    
+    
+    
     try {
       const comentarioData = {
         noticia: id,
@@ -79,6 +87,12 @@ const DetalleNoticias = () => {
   };
 
   const handleResponder = async (parentId) => {
+
+    if (!respuestaTexto.trim() || respuestaTexto.length < 5) {
+      setComentarioError("La respuesta debe tener al menos 5 caracteres.");
+      return;
+    }
+
     if (!respuestaTexto.trim()) return;
     setComentarioError(null);
     setComentarioSuccess(null);
