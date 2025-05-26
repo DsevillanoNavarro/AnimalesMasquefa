@@ -1,6 +1,119 @@
-Poner mas bonito Correos y estructurarlo mejor
-Hacer un boton para ir al menu de administracion
-Mejorar la estética de adopcion, comentarios y un poco del perfil
-Validaciones en general
-Arreglar la respuesta de comentarios
-Hacer que el formulario de sobre nosotros funcione
+✅ TO-DO LIST PARA MEJORAR EL TFG
+🧑‍💻 Frontend (React)
+Validaciones completas en formularios
+Añadir validaciones:
+
+Regex para emails, nombres, contraseñas, etc.
+
+Errores visuales al usuario (inputs rojos, mensajes en vivo).
+
+Evitar envío si hay campos vacíos o mal completados.
+
+Formulario de “Sobre Nosotros”
+
+Actualmente no funciona. Implementar su lógica de envío.
+
+Mostrar feedback tras el envío (éxito o error).
+
+Mejorar estética de adopción, comentarios y perfil
+
+Usa tarjetas visuales, bordes redondeados, colores suaves, iconos (por ejemplo de Lucide o FontAwesome).
+
+Revisa AdopcionEnviada.css, Perfil.css, DetalleNoticias.css.
+
+Accesibilidad y UX
+
+Añadir etiquetas aria, roles y navegación con teclado.
+
+Contrastes de color accesibles.
+
+Foco visual al navegar por teclado.
+
+Botón para acceso rápido al admin
+
+Botón fijo (ej. en Navbar si es admin).
+
+Condicional: solo visible si is_staff === true.
+
+Página de error 404 más atractiva
+
+Ya tienes Lottie, úsalo con animaciones personalizadas.
+
+Añadir botón “Volver a inicio”.
+
+🛠️ Backend (Django)
+Mejorar estructura de correos electrónicos
+
+Actualmente se indica que los correos son feos.
+
+Usa templates HTML bien diseñados con CSS inline.
+
+Añadir logo del refugio y una estructura tipo boletín.
+
+Sistema de logs o errores
+
+Añadir logs en consola o a archivo para producción (logging en settings.py).
+
+Registra errores de API, autenticación fallida, etc.
+
+Test unitarios más amplios
+
+En tests.py, cubrir más casos (usuarios, adopciones, comentarios).
+
+Usa pytest o unittest con factories si es posible.
+
+Control de permisos más estricto
+
+Verifica que solo usuarios autenticados puedan acceder a ciertas rutas o modificar datos.
+
+Protege endpoints sensibles como creación/modificación de animales o noticias.
+
+🌐 General / Full Stack
+Mejorar documentación en README.md
+
+Añadir capturas de pantalla.
+
+Instrucciones de despliegue detalladas con Render y Netlify.
+
+Diagrama de arquitectura de carpetas o flujo de datos (puedes usar draw.io).
+
+Internacionalización (i18n)
+
+Aunque está en español, podrías preparar estructura multilenguaje.
+
+Usar gettext en Django, y react-i18next en frontend.
+
+Optimización de imágenes
+
+Comprimir imágenes en /media/ para mejorar carga.
+
+Añadir loading="lazy" en frontend.
+
+Progresive Web App (PWA)
+
+Estás cerca: tienes manifest.json. Añade serviceWorker para hacerlo offline.
+
+Icono de instalación + splash screen personalizado.
+
+🏁 BONUS – Ideas Pro
+Panel estadístico para admins
+
+Mostrar estadísticas: número de adopciones, animales disponibles, usuarios activos, etc.
+
+Usa gráficos con Chart.js o Recharts.
+
+Notificaciones por email más avanzadas
+
+Integrar con servicios como Mailgun o SendGrid.
+
+Emails automáticos más ricos y personalizados.
+
+SEO básico y metaetiquetas
+
+Añadir títulos dinámicos, descripciones, favicon.
+
+Robots.txt y sitemap.xml funcionales.
+
+Modo oscuro
+
+Toggle con useState + className condicional + localStorage.

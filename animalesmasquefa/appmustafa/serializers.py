@@ -128,6 +128,14 @@ class UsuarioSerializer(serializers.ModelSerializer):
         if Adopcion.objects.filter(animal=data['animal'], usuario=data['usuario'], aceptada='Pendiente').exists():
             raise serializers.ValidationError("Ya has enviado una solicitud para este animal.")
         return data
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
+        if not any(c.isupper() for c in value):
+            raise serializers.ValidationError("La contraseña debe contener al menos una letra mayúscula.")
+        if not any(c.isdigit() for c in value):
+            raise serializers.ValidationError("La contraseña debe contener al menos un número.")
+        return value
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -172,3 +180,12 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     uidb64 = serializers.CharField()
     token = serializers.CharField()
     new_password = serializers.CharField(min_length=8)
+
+    def validate_new_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres.")
+        if not any(c.isupper() for c in value):
+            raise serializers.ValidationError("La contraseña debe contener al menos una letra mayúscula.")
+        if not any(c.isdigit() for c in value):
+            raise serializers.ValidationError("La contraseña debe contener al menos un número.")
+        return value
