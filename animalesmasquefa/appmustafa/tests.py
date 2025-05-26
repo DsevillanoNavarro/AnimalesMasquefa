@@ -53,16 +53,26 @@ class AnimalesMasquefaTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_prevenir_adopcion_duplicada(self):
-        existing_pdf = SimpleUploadedFile('old.pdf', b'%PDF-1.4 old', content_type='application/pdf')
-        Adopcion.objects.create(animal=self.animal, usuario=self.user, contenido=existing_pdf)
-        new_pdf = SimpleUploadedFile('new.pdf', b'%PDF-1.4 new', content_type='application/pdf')
+        url = '/api/adopciones/'  # o usa reverse si lo tienes
+        contenido = SimpleUploadedFile("testfile.pdf", b"file_content", content_type="application/pdf")
+
         data = {
             'animal': self.animal.id,
             'usuario': self.user.id,
-            'contenido': new_pdf
+            'contenido': contenido,
         }
-        response = self.client.post(url, data, format='multipart', **self.auth_header)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)  # <--- CAMBIA ESTO
+
+        response1 = self.client.post(url, data, format='multipart', **self.auth_header)
+        self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
+
+        # Segundo intento para probar duplicación
+        contenido2 = SimpleUploadedFile("testfile2.pdf", b"otro_contenido", content_type="application/pdf")
+        data['contenido'] = contenido2
+        response2 = self.client.post(url, data, format='multipart', **self.auth_header)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(b"Ya has enviado una solicitud", response2.content)
+
+        
 
     def test_comentario_vacio_rechazado(self):
         url = reverse('comentario-list')

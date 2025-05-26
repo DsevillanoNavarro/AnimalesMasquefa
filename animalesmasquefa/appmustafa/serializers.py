@@ -101,6 +101,15 @@ class AdopcionSerializer(serializers.ModelSerializer):
         model = Adopcion
         fields = '__all__'
 
+    def validate(self, data):
+        usuario = data.get('usuario')
+        animal = data.get('animal')
+
+        if self.instance is None:  # Solo validar en creación
+            if Adopcion.objects.filter(animal=animal, usuario=usuario).exists():
+                raise serializers.ValidationError("Ya has enviado una solicitud para este animal.")
+        return data
+
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
