@@ -196,20 +196,15 @@ export default function Profile() {
         ))}
       </div>
       {mensaje && (
-  <div style={{
-    marginTop: '1rem',
-    marginBottom: '1rem',
-    padding: '0.5rem 1rem',
-    backgroundColor: mensaje.startsWith('✅') ? '#d4edda' : '#f8d7da',
-    color: mensaje.startsWith('✅') ? '#155724' : '#721c24',
-    border: '1px solid',
-    borderColor: mensaje.startsWith('✅') ? '#c3e6cb' : '#f5c6cb',
-    borderRadius: '4px',
-    textAlign: 'center'
-  }}>
-    {mensaje}
+  <div
+    className={`login-error ${
+      mensaje.startsWith('✅') ? 'alert-success' : 'alert-error'
+    }`}
+  >
+    {mensaje.replace('✅', '').replace('❌', '').trim()}
   </div>
 )}
+
       {/* Contenido pestaña */}
       <div className="profile-tab-content">
         {loadingData && <p>Cargando datos…</p>}

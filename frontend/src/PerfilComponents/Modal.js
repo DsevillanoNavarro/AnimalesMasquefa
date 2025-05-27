@@ -96,13 +96,27 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
 
         <footer className="modal-footer">
           <button onClick={onClose}>Cancelar</button>
-          {(type.startsWith('edit') && <button onClick={handleSave}>Guardar</button>) ||
-           (type.startsWith('delete') && <button onClick={handleDelete}>Eliminar</button>)}
-        </footer>
-      </div>
-    </div>
-  );
-}
+          {type.startsWith('edit') && (
+              <button
+                onClick={handleSave}
+                disabled={
+                  (type === 'editAdopcion' && !form.pdf) ||
+                  (type === 'editComentario' && form.texto.trim() === item.contenido.trim())
+                }
+              >
+                Guardar
+              </button>
+            )}
+
+            {type.startsWith('delete') && (
+              <button onClick={handleDelete}>Eliminar</button>
+            )}
+
+                    </footer>
+                  </div>
+                </div>
+              );
+            }
 
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
