@@ -18,6 +18,7 @@ export default function Profile() {
   const [comentarios, setComentarios] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
   const [dataError, setDataError] = useState(null);
+  const [mensaje, setMensaje] = useState('');
 
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null, item: null });
 
@@ -79,18 +80,43 @@ export default function Profile() {
   const handleModalSave = (type, item, form) => {
     if (type === 'editAdopcion') {
       const formData = new FormData();
-      formData.append('aceptada', form.estado);
       if (form.pdf) formData.append('contenido', form.pdf);
+  
       adopcionService.actualizarAdopcionConPdf(item.id, formData)
-        .then(u => setAdopciones(curr => curr.map(a => a.id === u.id ? { ...a, aceptada: u.aceptada, contenido: u.contenido } : a)))
-        .finally(closeModal);
+        .then(u => {
+          setAdopciones(curr =>
+            curr.map(a => a.id === u.id ? { ...a, contenido: u.contenido } : a)
+          );
+          setMensaje('✅ Adopción actualizada correctamente.');
+        })
+        .catch(() => {
+          setMensaje('❌ Error al actualizar la adopción.');
+        })
+        .finally(() => {
+          closeModal();
+          setTimeout(() => setMensaje(''), 4000); // limpiar mensaje después de 4 seg
+        });
     }
+  
     if (type === 'editComentario') {
       comentarioService.actualizarComentario(item.id, { contenido: form.texto })
-        .then(() => setComentarios(curr => curr.map(c => c.id === item.id ? { ...c, contenido: form.texto } : c)))
-        .finally(closeModal);
+        .then(() => {
+          setComentarios(curr =>
+            curr.map(c => c.id === item.id ? { ...c, contenido: form.texto } : c)
+          );
+          setMensaje('✅ Comentario actualizado correctamente.');
+        })
+        .catch(() => {
+          setMensaje('❌ Error al actualizar el comentario.');
+        })
+        .finally(() => {
+          closeModal();
+          setTimeout(() => setMensaje(''), 4000);
+        });
     }
   };
+  
+  
 
   const handleModalDelete = (type, item) => {
     if (type === 'deleteAdopcion') {
@@ -169,7 +195,21 @@ export default function Profile() {
           </button>
         ))}
       </div>
-
+      {mensaje && (
+  <div style={{
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    padding: '0.5rem 1rem',
+    backgroundColor: mensaje.startsWith('✅') ? '#d4edda' : '#f8d7da',
+    color: mensaje.startsWith('✅') ? '#155724' : '#721c24',
+    border: '1px solid',
+    borderColor: mensaje.startsWith('✅') ? '#c3e6cb' : '#f5c6cb',
+    borderRadius: '4px',
+    textAlign: 'center'
+  }}>
+    {mensaje}
+  </div>
+)}
       {/* Contenido pestaña */}
       <div className="profile-tab-content">
         {loadingData && <p>Cargando datos…</p>}
@@ -225,6 +265,8 @@ export default function Profile() {
         onSave={handleModalSave}
         onDelete={handleModalDelete}
       />
+      
+
     </div>
   );
 }
