@@ -175,3 +175,5 @@ Este proyecto está bajo la Licencia MIT.
 > _Desarrollado con ❤️ por DsevillanoNavarro_
 
 ```
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa)
