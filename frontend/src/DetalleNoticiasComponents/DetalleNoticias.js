@@ -222,10 +222,10 @@ const DetalleNoticias = () => {
       <div className="comments-section mt-5">
         <h3>Comentarios</h3>
         {comentarioSuccess && (
-          <div className="alert alert-success">{comentarioSuccess}</div>
+          <div className="alert-message alert-success">{comentarioSuccess}</div>
         )}
         {comentarioError && (
-          <div className="alert alert-danger">{comentarioError}</div>
+          <div className="alert-message alert-error">{comentarioError}</div>
         )}
         {isAuthenticated ? (
           <>

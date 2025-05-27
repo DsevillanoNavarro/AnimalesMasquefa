@@ -121,13 +121,32 @@ export default function Profile() {
   const handleModalDelete = (type, item) => {
     if (type === 'deleteAdopcion') {
       adopcionService.eliminarAdopcion(item.id)
-        .then(() => setAdopciones(curr => curr.filter(a => a.id !== item.id)))
-        .finally(closeModal);
+        .then(() => {
+          setAdopciones(curr => curr.filter(a => a.id !== item.id));
+          setMensaje('✅ Adopción eliminada correctamente.');
+        })
+        .catch(() => {
+          setMensaje('❌ Error al eliminar la adopción.');
+        })
+        .finally(() => {
+          closeModal();
+          setTimeout(() => setMensaje(''), 4000);
+        });
     }
+  
     if (type === 'deleteComentario') {
       comentarioService.eliminarComentario(item.id)
-        .then(() => setComentarios(curr => curr.filter(c => c.id !== item.id)))
-        .finally(closeModal);
+        .then(() => {
+          setComentarios(curr => curr.filter(c => c.id !== item.id));
+          setMensaje('✅ Comentario eliminado correctamente.');
+        })
+        .catch(() => {
+          setMensaje('❌ Error al eliminar el comentario.');
+        })
+        .finally(() => {
+          closeModal();
+          setTimeout(() => setMensaje(''), 4000);
+        });
     }
   };
 
@@ -197,7 +216,7 @@ export default function Profile() {
       </div>
       {mensaje && (
   <div
-    className={`login-error ${
+    className={`alert-message ${
       mensaje.startsWith('✅') ? 'alert-success' : 'alert-error'
     }`}
   >

@@ -133,7 +133,7 @@ const Adoptar = () => {
               )}
             </div>
 
-          {error && <p className="text-danger mt-2">{error}</p>}
+          {error && <p className="alert-message alert-error">{error}</p>}
 
           <button
             className="custom-btn mt-3"

@@ -87,7 +87,7 @@ const UsuarioForm = () => {
         required
         className="login-input"
       />
-      {formErrors.username && <p className="login-error">{formErrors.username}</p>}
+      {formErrors.username && <p className="alert-message alert-error">{formErrors.username}</p>}
 
       <input
         type="text"
@@ -116,7 +116,7 @@ const UsuarioForm = () => {
         required
         className="login-input"
       />
-      {formErrors.email && <p className="login-error">{formErrors.email}</p>}
+      {formErrors.email && <p className="alert-message alert-error">{formErrors.email}</p>}
 
       <input
         type="password"
@@ -127,7 +127,7 @@ const UsuarioForm = () => {
         required
         className="login-input"
       />
-      {formErrors.password && <p className="login-error">{formErrors.password}</p>}
+      {formErrors.password && <p className="alert-message alert-error">{formErrors.password}</p>}
 
       <div className="login-checkbox">
         <label>

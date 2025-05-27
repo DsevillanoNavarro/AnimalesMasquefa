@@ -67,7 +67,12 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
             <>
               {item.parent_contenido && (
                 <p className="text-muted" style={{ marginBottom: '10px' }}>
-                  En respuesta a: <em>"{item.parent_contenido}"</em>
+                  En respuesta a:{" "}
+                  <em>
+                    "{item.parent_contenido.length > 50
+                      ? item.parent_contenido.slice(0, 50).trim() + '…'
+                      : item.parent_contenido}"
+                  </em>
                 </p>
               )}
               {item.noticia_titulo && item.noticia_id && (
