@@ -129,7 +129,7 @@ const DetalleNoticias = () => {
         <div
           key={comentario.id}
           className="mb-3 pb-2"
-          style={{ marginLeft: nivel * 20 }}
+          style={{ marginLeft: Math.min(nivel, 3) * 20 }}
         >
           <div className="border-start ps-3 d-flex align-items-start gap-2">
             {comentario.usuario_foto ? (

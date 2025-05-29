@@ -58,15 +58,15 @@ const Adoptar = () => {
       });
       navigate("/adopcionEnviada", { state: { animal } });
     } catch (err) {
-      console.error(err);
       const backendMessage =
-        err.response?.data?.error ||
         err.response?.data?.message ||
-        "Error al enviar solicitud.";
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "Ya has enviado una solicitud para este animal.";
+    
       setError(backendMessage);
-    } finally {
-      setSubmitting(false);
     }
+    
   };
 
   if (!animal || userLoading) return null;
