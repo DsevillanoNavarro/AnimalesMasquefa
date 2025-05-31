@@ -187,18 +187,6 @@ npm test
 
 ---
 
-## ✅ Mejoras Pendientes
-
-Ver el archivo [`porHacer`](./porHacer):
-
-```txt
-- Arreglar adopciones de la misma persona (validación mejorada).
-- Arreglar visualización de "ver más comentarios".
-- Mejorar estética de los emails enviados.
-```
-
----
-
 ## 🤝 Contribuir
 
 ```bash
