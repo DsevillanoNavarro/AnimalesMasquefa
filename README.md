@@ -1,185 +1,185 @@
 # 🐾 AnimalesMasquefa
 
-**AnimalesMasquefa** es una plataforma web integral para la gestión de un refugio de animales, desarrollada como Trabajo de Fin de Grado. Combina un backend robusto en Django con un frontend moderno en React para ofrecer una experiencia completa a usuarios, administradores y adoptantes.
+**AnimalesMasquefa** es una plataforma web para la gestión integral de un refugio de animales. Este proyecto ha sido desarrollado como Trabajo de Fin de Grado, combinando tecnologías modernas para el frontend y backend.
+
+Permite a usuarios explorar animales disponibles para adopción, enviar solicitudes, mantenerse informados con noticias del refugio y gestionar su perfil de forma segura. A los administradores les proporciona una interfaz amigable para gestionar todos los recursos, con un panel de control extendido y notificaciones automáticas por email.
 
 ---
 
-## 🧩 Funcionalidades Principales
+## 🧩 Funcionalidades
 
-### 👤 Usuarios
-- Registro, login, recuperación y restablecimiento de contraseña.
-- Perfil de usuario editable y visualización de adopciones realizadas.
+### 👥 Usuarios
+- Registro, inicio/cierre de sesión.
+- Recuperación y restablecimiento de contraseña.
+- Gestión de perfil.
 
-### 🐶 Animales
-- Visualización pública de animales disponibles para adopción.
-- Ficha de detalle con imágenes, descripciones y características.
-- Gestión completa desde el panel de administración (CRUD).
+### 🐕‍🦺 Animales
+- Listado y detalle de animales.
+- CRUD completo desde el panel admin.
+- Gestión de imágenes.
 
-### 📨 Adopciones
-- Formulario de adopción con validación.
-- Múltiples adopciones permitidas por usuario con gestión de duplicados.
-- Confirmación y rechazo de solicitudes por correo electrónico.
+### 📬 Adopciones
+- Formulario de solicitud con validación.
+- Control de duplicados.
+- Notificaciones por email (aceptación/rechazo).
 
-### 📰 Noticias
-- Sistema de noticias con listados y detalle.
-- Publicación automática vía email a los administradores.
+### 🗞 Noticias
+- Publicación de noticias.
+- Visualización en frontend (home y página dedicada).
+- Notificaciones automáticas por email.
 
 ### 💬 Comentarios
-- Sistema jerárquico de comentarios (con subcomentarios).
-- Moderación y eliminación desde el panel de administración.
+- Añadir y responder comentarios (jerárquico).
+- Moderación desde el panel de administración.
 
-### 📧 Sistema de Emails
-- Notificaciones automáticas personalizadas (HTML).
-- Templates para contacto, adopción aceptada/rechazada, nuevo animal, etc.
-
-### ⚙️ Panel de Administración
-- Dashboard personalizado con Jet para tareas rápidas y datos recientes.
-- Atajos visuales, diseño moderno y funcionalidad extendida.
+### ✉️ Emails
+- Sistema de plantillas HTML para notificaciones.
+- Email de confirmación de adopción, nuevo animal, contacto recibido, etc.
 
 ---
 
 ## 📁 Estructura del Proyecto
 
-├── backend/ (Django)
-│ ├── animalesmasquefa/ (project)
-│ ├── appmustafa/ (lógica principal del sistema)
-│ └── media/ (uploads: animales, usuarios, noticias)
-├── frontend/ (React)
-│ ├── src/
-│ ├── public/
-│ └── netlify.toml (configuración de despliegue)
-├── porHacer (tareas pendientes)
-└── README.md
-
-yaml
-Copiar
-Editar
+AnimalesMasquefa/
+├── animalesmasquefa/ # Backend Django
+│ ├── animalesmasquefa/ # Configuración del proyecto
+│ ├── appmustafa/ # App principal (models, views, serializers)
+│ ├── media/ # Archivos subidos
+│ ├── staticfiles/ # Archivos estáticos
+├── frontend/ # Frontend en React
+│ ├── src/ # Código fuente
+│ ├── public/ # Archivos públicos y configuración Netlify
+├── porHacer # Lista de mejoras pendientes
+├── README.md # Este archivo
 
 ---
 
-## 🧪 Tecnologías
+## 🛠 Tecnologías Utilizadas
 
 ### Backend
-- **Python 3**, **Django 5**, **Django REST Framework**
+- Python 3.x
+- Django 5
+- Django REST Framework
 - PostgreSQL
-- Autenticación JWT
-- Gunicorn, Jet Dashboard, Grappelli
+- JWT (autenticación)
+- Jet & Grappelli (dashboard)
+- Gunicorn (producción)
 
 ### Frontend
-- **React** + **React Router**
-- Axios para consumo de APIs
-- Lottie + animaciones
-- Estilos personalizados con CSS
-- Deployable en **Netlify**, **Vercel** u otro proveedor
+- React
+- React Router
+- Axios
+- Lottie (animaciones)
+- Netlify / Vercel (despliegue)
 
 ---
 
-## ⚙️ Instalación Local
+## 🚀 Instalación
 
-### 🔙 Backend (Django)
+### 🔙 Backend
 
 ```bash
-# Clona el repositorio
-git clone https://github.com/DsevillanoNavarro/AnimalesMasquefa.git
-cd AnimalesMasquefa/animalesmasquefa
-
-# Crea y activa un entorno virtual
+# Crear entorno virtual
 python -m venv venv
-source venv/bin/activate  # en Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Instala dependencias
+# Instalar dependencias
 pip install -r requirements.txt
 
-# Ajusta la conexión PostgreSQL en settings.py
+# Configurar PostgreSQL en settings.py
 
-# Ejecuta migraciones
+# Aplicar migraciones
 python manage.py migrate
 
-# Crea superusuario
+# Crear superusuario
 python manage.py createsuperuser
 
-# Ejecuta el servidor
+# Ejecutar servidor
 python manage.py runserver
-🌐 Frontend (React)
-bash
-Copiar
-Editar
-cd ../frontend
+🌐 Frontend
+
+cd frontend
 npm install
 npm start
 🔐 Variables de Entorno
-.env para el backend: define claves secretas, base de datos, y configuración de JWT.
+.env (Django): claves secretas, base de datos, configuración JWT.
 
-netlify.toml para frontend: configuración de rutas SPA.
+netlify.toml: para soporte SPA en Netlify.
 
-🔌 Endpoints REST Principales
-Ruta	Método	Descripción
-/api/animales/	GET	Lista de animales
-/api/animales/:id	GET	Detalle de un animal
-/api/noticias/	GET	Lista de noticias
-/api/comentarios/	POST	Añadir comentario
-/api/adopciones/	POST	Enviar solicitud de adopción
-/api/usuarios/	POST	Registro de usuario
-/api/token/	POST	Obtener token JWT
-/api/token/refresh/	POST	Refrescar token
+📦 Endpoints REST
+🔑 Autenticación
+Método	Ruta	Descripción
+POST	/api/token/	Obtener token JWT
+POST	/api/token/refresh/	Refrescar token JWT
+POST	/api/token/verify/	Verificar validez del token
 
-🌍 Despliegue
-Backend
-Configurado para Render.com usando Procfile y Gunicorn.
+👥 Usuarios
+Método	Ruta	Descripción
+POST	/api/usuarios/registro/	Registro de nuevo usuario
+POST	/api/usuarios/login/	Inicio de sesión
+GET	/api/usuarios/perfil/	Obtener perfil del usuario
+PUT	/api/usuarios/perfil/	Editar perfil del usuario
 
-Frontend
-Desplegable en Netlify (con netlify.toml) o Vercel.
+🐾 Animales
+Método	Ruta	Descripción
+GET	/api/animales/	Listar todos los animales
+GET	/api/animales/:id/	Obtener detalles de un animal
+POST	/api/animales/	Crear nuevo animal
+PUT	/api/animales/:id/	Editar animal
+DELETE	/api/animales/:id/	Eliminar animal
 
-Redirecciones SPA habilitadas (public/_redirects).
+🗞 Noticias
+Método	Ruta	Descripción
+GET	/api/noticias/	Listar noticias
+GET	/api/noticias/:id/	Ver detalle de noticia
+POST	/api/noticias/	Crear nueva noticia
+PUT	/api/noticias/:id/	Editar noticia
+DELETE	/api/noticias/:id/	Eliminar noticia
+
+💬 Comentarios
+Método	Ruta	Descripción
+GET	/api/comentarios/	Listar comentarios
+POST	/api/comentarios/	Crear nuevo comentario
+
+📬 Adopciones
+Método	Ruta	Descripción
+GET	/api/adopciones/	Listar solicitudes
+POST	/api/adopciones/	Enviar nueva solicitud
 
 🧪 Testing
-Backend
+Backend (Django)
 bash
-Copiar
-Editar
+
 python manage.py test
-Frontend
-bash
-Copiar
-Editar
+Frontend (React)
+
+
 npm test
-✅ Tareas Pendientes
-Ver archivo porHacer
+🌍 Despliegue
+Backend: Render.com (usando Gunicorn + PostgreSQL).
 
-text
-Copiar
-Editar
-- Arreglar validación de adopciones repetidas
-- Mejorar visualización de comentarios y botón "ver más"
-- Mejorar diseño de emails (estética HTML)
-🤝 Contribuir
-Haz fork del repositorio
+Frontend: Netlify (con netlify.toml para redirecciones SPA).
 
-Crea una nueva rama:
-git checkout -b feature/nueva-funcionalidad
+# 1. Haz fork del repositorio
+# 2. Crea una rama:
+git checkout -b feature/mi-nueva-funcionalidad
 
-Realiza tus cambios y commitea:
-git commit -am "Agrega nueva funcionalidad"
+# 3. Realiza cambios y haz commit:
+git commit -am "Agrega X"
 
-Haz push y abre un Pull Request:
-git push origin feature/nueva-funcionalidad
-
+# 4. Push y Pull Request
+git push origin feature/mi-nueva-funcionalidad
 📄 Licencia
-Este proyecto está licenciado bajo la MIT License.
+Este proyecto está bajo la licencia MIT.
 
-✨ Autor
+👤 Autor
 Daniel Sevillano Navarro
-Trabajo de Fin de Grado – Grado en Ingeniería Informática
-Universitat Oberta de Catalunya
-2025
+Trabajo de Fin de Grado — Universitat Oberta de Catalunya
+GitHub: DsevillanoNavarro
 
-“Adopta, no compres 🐕🐈‍⬛. Este sistema ayuda a conectar vidas.”
+“Adopta, no compres. Este proyecto conecta vidas.” 🐶🐱
 
-arduino
-Copiar
-Editar
-
-¿Quieres que también lo prepare como archivo descargable o que lo suba a un repositorio de GitHub directamente con `git`?
+---
 
 
 
