@@ -40,17 +40,19 @@ Permite a usuarios explorar animales disponibles para adopción, enviar solicitu
 
 ## 📁 Estructura del Proyecto
 
+```
 AnimalesMasquefa/
-├── animalesmasquefa/ # Backend Django
-│ ├── animalesmasquefa/ # Configuración del proyecto
-│ ├── appmustafa/ # App principal (models, views, serializers)
-│ ├── media/ # Archivos subidos
-│ ├── staticfiles/ # Archivos estáticos
-├── frontend/ # Frontend en React
-│ ├── src/ # Código fuente
-│ ├── public/ # Archivos públicos y configuración Netlify
-├── porHacer # Lista de mejoras pendientes
-├── README.md # Este archivo
+├── animalesmasquefa/     # Backend Django
+│   ├── animalesmasquefa/ # Configuración del proyecto
+│   ├── appmustafa/       # App principal (models, views, serializers)
+│   ├── media/            # Archivos subidos
+│   ├── staticfiles/      # Archivos estáticos
+├── frontend/             # Frontend en React
+│   ├── src/              # Código fuente
+│   ├── public/           # Archivos públicos y configuración Netlify
+├── porHacer              # Lista de mejoras pendientes
+├── README.md             # Este archivo
+```
 
 ---
 
@@ -96,70 +98,110 @@ python manage.py createsuperuser
 
 # Ejecutar servidor
 python manage.py runserver
-🌐 Frontend
+```
 
+### 🌐 Frontend
+
+```bash
 cd frontend
 npm install
 npm start
-🔐 Variables de Entorno
-.env (Django): claves secretas, base de datos, configuración JWT.
+```
 
-netlify.toml: para soporte SPA en Netlify.
+---
 
-📦 Endpoints REST
-🔑 Autenticación
-Método	Ruta	Descripción
-POST	/api/token/	Obtener token JWT
-POST	/api/token/refresh/	Refrescar token JWT
-POST	/api/token/verify/	Verificar validez del token
+## 🔐 Variables de Entorno
 
-👥 Usuarios
-Método	Ruta	Descripción
-POST	/api/usuarios/registro/	Registro de nuevo usuario
-POST	/api/usuarios/login/	Inicio de sesión
-GET	/api/usuarios/perfil/	Obtener perfil del usuario
-PUT	/api/usuarios/perfil/	Editar perfil del usuario
+- `.env` (Django): claves secretas, base de datos, configuración JWT.
+- `netlify.toml`: para soporte SPA en Netlify.
 
-🐾 Animales
-Método	Ruta	Descripción
-GET	/api/animales/	Listar todos los animales
-GET	/api/animales/:id/	Obtener detalles de un animal
-POST	/api/animales/	Crear nuevo animal
-PUT	/api/animales/:id/	Editar animal
-DELETE	/api/animales/:id/	Eliminar animal
+---
 
-🗞 Noticias
-Método	Ruta	Descripción
-GET	/api/noticias/	Listar noticias
-GET	/api/noticias/:id/	Ver detalle de noticia
-POST	/api/noticias/	Crear nueva noticia
-PUT	/api/noticias/:id/	Editar noticia
-DELETE	/api/noticias/:id/	Eliminar noticia
+## 📦 Endpoints REST
 
-💬 Comentarios
-Método	Ruta	Descripción
-GET	/api/comentarios/	Listar comentarios
-POST	/api/comentarios/	Crear nuevo comentario
+### 🔑 Autenticación
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| POST   | `/api/token/`              | Obtener token JWT                |
+| POST   | `/api/token/refresh/`      | Refrescar token JWT              |
+| POST   | `/api/token/verify/`       | Verificar validez del token      |
 
-📬 Adopciones
-Método	Ruta	Descripción
-GET	/api/adopciones/	Listar solicitudes
-POST	/api/adopciones/	Enviar nueva solicitud
+### 👥 Usuarios
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| POST   | `/api/usuarios/registro/`  | Registro de nuevo usuario        |
+| POST   | `/api/usuarios/login/`     | Inicio de sesión                 |
+| GET    | `/api/usuarios/perfil/`    | Obtener perfil del usuario       |
+| PUT    | `/api/usuarios/perfil/`    | Editar perfil del usuario        |
 
-🧪 Testing
-Backend (Django)
-bash
+### 🐾 Animales
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| GET    | `/api/animales/`           | Listar todos los animales        |
+| GET    | `/api/animales/:id/`       | Obtener detalles de un animal    |
+| POST   | `/api/animales/`           | Crear nuevo animal               |
+| PUT    | `/api/animales/:id/`       | Editar animal                    |
+| DELETE | `/api/animales/:id/`       | Eliminar animal                  |
 
+### 🗞 Noticias
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| GET    | `/api/noticias/`           | Listar noticias                  |
+| GET    | `/api/noticias/:id/`       | Ver detalle de noticia           |
+| POST   | `/api/noticias/`           | Crear nueva noticia              |
+| PUT    | `/api/noticias/:id/`       | Editar noticia                   |
+| DELETE | `/api/noticias/:id/`       | Eliminar noticia                 |
+
+### 💬 Comentarios
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| GET    | `/api/comentarios/`        | Listar comentarios               |
+| POST   | `/api/comentarios/`        | Crear nuevo comentario           |
+
+### 📬 Adopciones
+| Método | Ruta                       | Descripción                      |
+|--------|----------------------------|----------------------------------|
+| GET    | `/api/adopciones/`         | Listar solicitudes               |
+| POST   | `/api/adopciones/`         | Enviar nueva solicitud           |
+
+---
+
+## 🧪 Testing
+
+### Backend (Django)
+```bash
 python manage.py test
-Frontend (React)
+```
 
-
+### Frontend (React)
+```bash
 npm test
-🌍 Despliegue
-Backend: Render.com (usando Gunicorn + PostgreSQL).
+```
 
-Frontend: Netlify (con netlify.toml para redirecciones SPA).
+---
 
+## 🌍 Despliegue
+
+- **Backend**: Render.com (usando Gunicorn + PostgreSQL).
+- **Frontend**: Netlify (con `netlify.toml` para redirecciones SPA).
+
+---
+
+## ✅ Mejoras Pendientes
+
+Ver el archivo [`porHacer`](./porHacer):
+
+```txt
+- Arreglar adopciones de la misma persona (validación mejorada).
+- Arreglar visualización de "ver más comentarios".
+- Mejorar estética de los emails enviados.
+```
+
+---
+
+## 🤝 Contribuir
+
+```bash
 # 1. Haz fork del repositorio
 # 2. Crea una rama:
 git checkout -b feature/mi-nueva-funcionalidad
@@ -169,20 +211,14 @@ git commit -am "Agrega X"
 
 # 4. Push y Pull Request
 git push origin feature/mi-nueva-funcionalidad
-📄 Licencia
-Este proyecto está bajo la licencia MIT.
-
-👤 Autor
-Daniel Sevillano Navarro
-Trabajo de Fin de Grado — Universitat Oberta de Catalunya
-GitHub: DsevillanoNavarro
-
-“Adopta, no compres. Este proyecto conecta vidas.” 🐶🐱
+```
 
 ---
 
+## 📄 Licencia
 
+Este proyecto está bajo la licencia MIT.
 
+---
 
-
-
+> “Adopta, no compres. Este proyecto conecta vidas.” 🐶🐱
