@@ -132,7 +132,7 @@ class Adopcion(models.Model):
         verbose_name_plural = 'Adopciones'
 
     def __str__(self):
-        return self.animal.nombre
+        return self.animal.nombre + " por " + self.usuario.username
     
     def clean(self):
         if self.pk:  # Ya existe

@@ -153,12 +153,13 @@ const DetalleNoticias = () => {
                 }}
               />
             )}
-            <div>
-              <strong>{comentario.usuario_username}</strong>{" "}
-              <small className="text-muted">
-                - {new Date(comentario.fecha_hora).toLocaleString()}
-              </small>
-              <p>{comentario.contenido}</p>
+            <div className="comentario-contenido-box">
+                <strong>{comentario.usuario_username}</strong>{" "}
+                <small className="text-muted">
+                  - {new Date(comentario.fecha_hora).toLocaleString()}
+                </small>
+                <p className="comentario-texto">{comentario.contenido}</p>
+
               {isAuthenticated && (
                 <button
                   className="btn btn-sm btn-outline-secondary mb-2"
@@ -249,16 +250,6 @@ const DetalleNoticias = () => {
             ) : (
               <>
                 {renderComentarios(comentarios)}
-                {comentariosVisibles < comentarios.length && (
-                  <div className="text-center mt-3">
-                    <button
-                      className="btn btn-outline-secondary"
-                      onClick={() => setComentariosVisibles((prev) => prev + 5)}
-                    >
-                      Ver más comentarios
-                    </button>
-                  </div>
-                )}
               </>
             )}
           </>

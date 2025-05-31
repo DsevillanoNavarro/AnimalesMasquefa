@@ -47,9 +47,10 @@ const Adoptar = () => {
       setError("Debes iniciar sesión para poder adoptar.");
       return;
     }
-
+  
     setSubmitting(true);
     setError(null);
+  
     try {
       await adopcionService.crearAdopcion({
         animal: animal.id,
@@ -65,9 +66,11 @@ const Adoptar = () => {
         "Ya has enviado una solicitud para este animal.";
     
       setError(backendMessage);
+    } finally {
+      setSubmitting(false); // ✅ esto garantiza que el botón se reactive
     }
-    
   };
+  
 
   if (!animal || userLoading) return null;
   if (userError) return <p>Error cargando usuario.</p>;

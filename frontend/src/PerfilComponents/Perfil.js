@@ -9,6 +9,8 @@ import './Perfil.css';
 import { Pencil, Trash } from 'react-bootstrap-icons';
 import { useAuth } from '../contexts/AuthContext'; // 👈 importamos logout
 import usuarioService from '../services/usuarioService';
+import { useLoading } from '../contexts/LoadingContext';
+import GlobalLoader from '../LoadingComponents/GlobalLoader';
 
 export default function Profile() {
   const { user, loading, error } = useCurrentUser();
@@ -19,8 +21,19 @@ export default function Profile() {
   const [loadingData, setLoadingData] = useState(false);
   const [dataError, setDataError] = useState(null);
   const [mensaje, setMensaje] = useState('');
+  
+  const { setLoading: setGlobalLoading } = useLoading();
+
+  useEffect(() => {
+    setGlobalLoading(loading);
+  }, [loading, setGlobalLoading]);
+
+
+  
 
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null, item: null });
+
+  
 
   useEffect(() => {
     if (!user) return;
@@ -52,12 +65,14 @@ export default function Profile() {
     if (!file) return;
   
     if (!file.type.startsWith("image/")) {
-      alert("Solo se permiten imágenes.");
+      setMensaje('❌ Solo se permiten imágenes.');
+      setTimeout(() => setMensaje(''), 4000);
       return;
     }
   
     if (file.size > 5 * 1024 * 1024) {
-      alert("La imagen no puede pesar más de 5MB.");
+      setMensaje('❌ La imagen no puede pesar más de 5MB.');
+      setTimeout(() => setMensaje(''), 4000);
       return;
     }
   
@@ -66,13 +81,18 @@ export default function Profile() {
   
     try {
       await usuarioService.updateUsuario(user.id, formData);
-      alert("Imagen actualizada. Recargando perfil...");
-      window.location.reload();
+      setMensaje('✅ Imagen actualizada correctamente.');
+      setTimeout(() => {
+        setMensaje('');
+        window.location.reload();
+      }, 2000); // espera 2 seg antes de recargar
     } catch (err) {
       console.error("Error al actualizar la imagen:", err);
-      alert("Error al subir la imagen.");
+      setMensaje('❌ Error al subir la imagen.');
+      setTimeout(() => setMensaje(''), 4000);
     }
   };
+  
   
   const openModal = (type, item) => setModalConfig({ isOpen: true, type, item });
   const closeModal = () => setModalConfig({ isOpen: false, type: null, item: null });
