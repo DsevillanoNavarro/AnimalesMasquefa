@@ -83,7 +83,7 @@ const Adoptar = () => {
           <div className="adoptar-info">
             <h2>{animal.nombre}</h2>
             <p><strong>Edad:</strong> {new Date().getFullYear() - new Date(animal.fecha_nacimiento).getFullYear()} años</p>
-            <p><strong>Nacimiento:</strong> {new Date(animal.fecha_nacimiento).toLocaleDateString()}</p>
+            <p><strong>Nacimiento:</strong> {new Date(animal.fecha_nacimiento).toLocaleDateString('es-ES')}</p>
             <p><strong>Situación:</strong> {animal.situacion}</p>
           </div>
         </div>

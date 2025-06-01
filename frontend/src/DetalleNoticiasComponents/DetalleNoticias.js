@@ -210,7 +210,7 @@ const DetalleNoticias = () => {
         <div className="col-12 col-md-6">
           <h1 className="detail-title">{noticia.titulo}</h1>
           <p className="detail-date">
-            {new Date(noticia.fecha_publicacion).toLocaleDateString()}
+            {new Date(noticia.fecha_publicacion).toLocaleDateString('es-ES')}
           </p>
           <div className="detail-content">
             {noticia.contenido.split("\n\n").map((parr, i) => (

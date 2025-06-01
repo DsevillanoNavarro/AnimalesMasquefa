@@ -32,8 +32,8 @@ const NoticiasRecientes = () => {
   const noticiasOrdenadas = useMemo(() => {
     const copia = [...noticias];
     return copia.sort((a, b) => {
-      const fechaA = new Date(a.fecha_creacion);
-      const fechaB = new Date(b.fecha_creacion);
+      const fechaA = new Date(a.fecha_publicacion); // ✅ usa el campo correcto
+      const fechaB = new Date(b.fecha_publicacion);
       return ordenFecha === "desc" ? fechaB - fechaA : fechaA - fechaB;
     });
   }, [noticias, ordenFecha]);

@@ -236,3 +236,17 @@
   flex: 1;
   min-width: 200px;
 }
+
+.profile-delete-link {
+  background: none;
+  border: none;
+  color: #dc3545;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.profile-delete-link:hover {
+  color: #c82333;
+}

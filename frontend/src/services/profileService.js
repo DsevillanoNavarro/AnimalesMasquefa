@@ -21,6 +21,15 @@ export function fetchCurrentUser() {
 }
 
 /**
+ * Servicio: elimina la cuenta del usuario autenticado
+ * @returns {Promise<void>}
+ */
+export function eliminarCuenta() {
+  return api.delete('usuarios/eliminar/');
+}
+
+
+/**
  * Hook: useCurrentUser
  * Combina la llamada al servicio fetchCurrentUser y maneja estado de carga y errores.
  */

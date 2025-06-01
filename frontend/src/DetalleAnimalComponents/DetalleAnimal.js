@@ -65,7 +65,7 @@ const AnimalDetail = () => {
           </p>
           <p className="detail-desc">
             <strong>Fecha de nacimiento:</strong>{" "}
-            {new Date(animal.fecha_nacimiento).toLocaleDateString()}
+            {new Date(animal.fecha_nacimiento).toLocaleDateString('es-ES')}
           </p>
           <p className="detail-desc">
             <strong>Situación:</strong> {animal.situacion}

@@ -52,8 +52,9 @@ const CatGallery = () => {
     .sort((a, b) => {
       const edadA = calcularEdad(a.fecha_nacimiento);
       const edadB = calcularEdad(b.fecha_nacimiento);
-      return edadA - edadB;
+      return edadB - edadA; 
     });
+    
 
   const indexInicio = (paginaActual - 1) * gatosPorPagina;
   const gatosPaginados = gatosFiltrados.slice(indexInicio, indexInicio + gatosPorPagina);

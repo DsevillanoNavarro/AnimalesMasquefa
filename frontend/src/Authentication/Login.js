@@ -55,7 +55,7 @@ const Login = () => {
         required
         className="login-input"
       />
-      {formErrors.username && <p className="login-error">{formErrors.username}</p>}
+      {formErrors.username && <p className="alert-message alert-error">{formErrors.username}</p>}
 
       <input
         type="password"
@@ -66,7 +66,7 @@ const Login = () => {
         required
         className="login-input"
       />
-      {formErrors.password && <p className="login-error">{formErrors.password}</p>}
+      {formErrors.password && <p className="alert-message alert-error">{formErrors.password}</p>}
 
       <button
         type="submit"
@@ -76,7 +76,7 @@ const Login = () => {
         Entrar
       </button>
 
-      {error && <p className="login-error">{error}</p>}
+      {error && <p className="alert-message alert-error">{error}</p>}
 
       <div className="login-links">
         <p>

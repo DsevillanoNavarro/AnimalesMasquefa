@@ -10,7 +10,10 @@ import { Pencil, Trash } from 'react-bootstrap-icons';
 import { useAuth } from '../contexts/AuthContext'; // 👈 importamos logout
 import usuarioService from '../services/usuarioService';
 import { useLoading } from '../contexts/LoadingContext';
-import GlobalLoader from '../LoadingComponents/GlobalLoader';
+import { eliminarCuenta } from '../services/profileService';
+import { useNavigate } from 'react-router-dom';
+
+
 
 export default function Profile() {
   const { user, loading, error } = useCurrentUser();
@@ -21,6 +24,8 @@ export default function Profile() {
   const [loadingData, setLoadingData] = useState(false);
   const [dataError, setDataError] = useState(null);
   const [mensaje, setMensaje] = useState('');
+  const navigate = useNavigate();
+
   
   const { setLoading: setGlobalLoading } = useLoading();
 
@@ -60,6 +65,21 @@ export default function Profile() {
       .finally(() => setLoadingData(false));
   }, [user]);
 
+  const handleEliminarCuenta = async () => {
+    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.");
+    if (!confirmacion) return;
+  
+    try {
+      await eliminarCuenta();
+      logout(); // de tu AuthContext
+      navigate("/");
+    } catch (error) {
+      console.error("Error al eliminar la cuenta:", error);
+      alert("Hubo un error al intentar eliminar tu cuenta.");
+    }
+  };
+
+  
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -203,6 +223,15 @@ export default function Profile() {
             <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
             <p><strong>Email:</strong> {user.email}</p>
 
+            <div className="mt-3">
+              <button
+                onClick={handleEliminarCuenta}
+                className="profile-delete-link"
+              >
+                Eliminar cuenta
+              </button>
+            </div>
+
             
           </div>
         </div>
@@ -220,6 +249,8 @@ export default function Profile() {
                   Panel de administración
                 </a>
               )}
+              
+
             </div>
 
       {/* Tabs */}

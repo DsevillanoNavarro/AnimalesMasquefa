@@ -32,12 +32,13 @@ token_generator = PasswordResetTokenGenerator()
 
 
 class AnimalViewSet(viewsets.ModelViewSet):
-    queryset = Animal.objects.all()
+    queryset = Animal.objects.all().order_by('-fecha_nacimiento')
     serializer_class = AnimalSerializer
     
 class NoticiaViewSet(viewsets.ModelViewSet):
-    queryset = Noticia.objects.all()
+    queryset = Noticia.objects.all().order_by('-fecha_publicacion')  # 🡨 orden por fecha más reciente
     serializer_class = NoticiaSerializer
+
 
 class ComentarioViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.all()
@@ -264,3 +265,11 @@ def contacto_view(request):
     email_message.send()
 
     return Response({"mensaje": "Correo enviado correctamente"})
+
+class EliminarCuentaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response({"mensaje": "Cuenta eliminada correctamente."}, status=status.HTTP_204_NO_CONTENT)
