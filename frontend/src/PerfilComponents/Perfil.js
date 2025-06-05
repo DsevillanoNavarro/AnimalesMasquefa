@@ -7,17 +7,15 @@ import animalService from '../services/animalService';
 import Modal from './Modal';
 import './Perfil.css';
 import { Pencil, Trash } from 'react-bootstrap-icons';
-import { useAuth } from '../contexts/AuthContext'; // 👈 importamos logout
+import { useAuth } from '../contexts/AuthContext';
 import usuarioService from '../services/usuarioService';
 import { useLoading } from '../contexts/LoadingContext';
 import { eliminarCuenta } from '../services/profileService';
 import { useNavigate } from 'react-router-dom';
 
-
-
 export default function Profile() {
   const { user, loading, error } = useCurrentUser();
-  const { logout } = useAuth(); // 👈 usamos logout
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('adopciones');
   const [adopciones, setAdopciones] = useState([]);
   const [comentarios, setComentarios] = useState([]);
@@ -25,20 +23,12 @@ export default function Profile() {
   const [dataError, setDataError] = useState(null);
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
-
-  
   const { setLoading: setGlobalLoading } = useLoading();
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null, item: null });
 
   useEffect(() => {
     setGlobalLoading(loading);
   }, [loading, setGlobalLoading]);
-
-
-  
-
-  const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null, item: null });
-
-  
 
   useEffect(() => {
     if (!user) return;
@@ -65,63 +55,47 @@ export default function Profile() {
       .finally(() => setLoadingData(false));
   }, [user]);
 
-  const handleEliminarCuenta = async () => {
-    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.");
-    if (!confirmacion) return;
-  
-    try {
-      await eliminarCuenta();
-      logout(); // de tu AuthContext
-      navigate("/");
-    } catch (error) {
-      console.error("Error al eliminar la cuenta:", error);
-      alert("Hubo un error al intentar eliminar tu cuenta.");
-    }
-  };
-
-  
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     if (!file.type.startsWith("image/")) {
       setMensaje('❌ Solo se permiten imágenes.');
       setTimeout(() => setMensaje(''), 4000);
       return;
     }
-  
+
     if (file.size > 5 * 1024 * 1024) {
       setMensaje('❌ La imagen no puede pesar más de 5MB.');
       setTimeout(() => setMensaje(''), 4000);
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("foto_perfil", file);
-  
+
     try {
       await usuarioService.updateUsuario(user.id, formData);
       setMensaje('✅ Imagen actualizada correctamente.');
       setTimeout(() => {
         setMensaje('');
         window.location.reload();
-      }, 2000); // espera 2 seg antes de recargar
+      }, 2000);
     } catch (err) {
       console.error("Error al actualizar la imagen:", err);
       setMensaje('❌ Error al subir la imagen.');
       setTimeout(() => setMensaje(''), 4000);
     }
   };
-  
-  
+
   const openModal = (type, item) => setModalConfig({ isOpen: true, type, item });
   const closeModal = () => setModalConfig({ isOpen: false, type: null, item: null });
-  
+
   const handleModalSave = (type, item, form) => {
     if (type === 'editAdopcion') {
       const formData = new FormData();
       if (form.pdf) formData.append('contenido', form.pdf);
-  
+
       adopcionService.actualizarAdopcionConPdf(item.id, formData)
         .then(u => {
           setAdopciones(curr =>
@@ -134,10 +108,10 @@ export default function Profile() {
         })
         .finally(() => {
           closeModal();
-          setTimeout(() => setMensaje(''), 4000); // limpiar mensaje después de 4 seg
+          setTimeout(() => setMensaje(''), 4000);
         });
     }
-  
+
     if (type === 'editComentario') {
       comentarioService.actualizarComentario(item.id, { contenido: form.texto })
         .then(() => {
@@ -155,8 +129,6 @@ export default function Profile() {
         });
     }
   };
-  
-  
 
   const handleModalDelete = (type, item) => {
     if (type === 'deleteAdopcion') {
@@ -173,7 +145,7 @@ export default function Profile() {
           setTimeout(() => setMensaje(''), 4000);
         });
     }
-  
+
     if (type === 'deleteComentario') {
       comentarioService.eliminarComentario(item.id)
         .then(() => {
@@ -182,6 +154,21 @@ export default function Profile() {
         })
         .catch(() => {
           setMensaje('❌ Error al eliminar el comentario.');
+        })
+        .finally(() => {
+          closeModal();
+          setTimeout(() => setMensaje(''), 4000);
+        });
+    }
+
+    if (type === 'deleteCuenta') {
+      eliminarCuenta()
+        .then(() => {
+          logout();
+          navigate('/');
+        })
+        .catch(() => {
+          setMensaje('❌ Error al eliminar la cuenta.');
         })
         .finally(() => {
           closeModal();
@@ -198,62 +185,50 @@ export default function Profile() {
     <div className="profile-container profile">
       <h1>Mi Perfil</h1>
 
-      {/* Info usuario */}
       <div className="profile-info-row">
-          <div className="profile-picture-container">
-            <label htmlFor="foto_perfil" className="profile-picture-label">
-              <img
-                src={`${process.env.REACT_APP_BACK_URL}${user.foto_perfil}`}
-                alt="Foto de perfil"
-                className="profile-picture-img"
-              />
-              <div className="profile-picture-overlay">Editar</div>
-            </label>
-            <input
-              type="file"
-              id="foto_perfil"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="profile-picture-input"
+        <div className="profile-picture-container">
+          <label htmlFor="foto_perfil" className="profile-picture-label">
+            <img
+              src={`${process.env.REACT_APP_BACK_URL}${user.foto_perfil}`}
+              alt="Foto de perfil"
+              className="profile-picture-img"
             />
-          </div>
-
-          <div className="profile-user-data">
-            <p><strong>Usuario:</strong> {user.username}</p>
-            <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-
-            <div className="mt-3">
-              <button
-                onClick={handleEliminarCuenta}
-                className="profile-delete-link"
-              >
-                Eliminar cuenta
-              </button>
-            </div>
-
-            
-          </div>
+            <div className="profile-picture-overlay">Editar</div>
+          </label>
+          <input
+            type="file"
+            id="foto_perfil"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="profile-picture-input"
+          />
         </div>
-        <div className="d-flex flex-column flex-md-row gap-3 mt-3">
-              <button className="custom-btn logout" onClick={logout}>
-                Cerrar sesión
-              </button>
-              {user.is_staff && (
-                <a
-                  href={`${process.env.REACT_APP_BACK_URL}/admin/`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="custom-btn admin"
-                >
-                  Panel de administración
-                </a>
-              )}
-              
 
-            </div>
+        <div className="profile-user-data">
+          <p><strong>Usuario:</strong> {user.username}</p>
+          <p><strong>Nombre:</strong> {user.first_name} {user.last_name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
 
-      {/* Tabs */}
+          <button onClick={() => openModal('deleteCuenta', {})} className="profile-delete-link">
+            Eliminar cuenta
+          </button>
+        </div>
+      </div>
+
+      <div className="d-flex flex-column flex-md-row gap-3 mt-3">
+        <button className="custom-btn logout" onClick={logout}>Cerrar sesión</button>
+        {user.is_staff && (
+          <a
+            href={`${process.env.REACT_APP_BACK_URL}/admin/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="custom-btn admin"
+          >
+            Panel de administración
+          </a>
+        )}
+      </div>
+
       <div className="profile-tabs">
         {['adopciones', 'comentarios'].map(tab => (
           <button
@@ -265,17 +240,13 @@ export default function Profile() {
           </button>
         ))}
       </div>
-      {mensaje && (
-  <div
-    className={`alert-message ${
-      mensaje.startsWith('✅') ? 'alert-success' : 'alert-error'
-    }`}
-  >
-    {mensaje.replace('✅', '').replace('❌', '').trim()}
-  </div>
-)}
 
-      {/* Contenido pestaña */}
+      {mensaje && (
+        <div className={`alert-message ${mensaje.startsWith('✅') ? 'alert-success' : 'alert-error'}`}>
+          {mensaje.replace('✅', '').replace('❌', '').trim()}
+        </div>
+      )}
+
       <div className="profile-tab-content">
         {loadingData && <p>Cargando datos…</p>}
         {dataError && <p>{dataError}</p>}
@@ -301,18 +272,10 @@ export default function Profile() {
                 <div className="profile-card-body">
                   <p>{c.contenido || c.text}</p>
                   <small>{new Date(c.fecha_hora || c.created_at).toLocaleString()}</small>
-                  <button
-                    aria-label="Editar"
-                    onClick={() => openModal('editComentario', c)}
-                    className="icon-button"
-                  >
+                  <button onClick={() => openModal('editComentario', c)} className="icon-button">
                     <Pencil size={16} />
                   </button>
-                  <button
-                    aria-label="Eliminar"
-                    onClick={() => openModal('deleteComentario', c)}
-                    className="icon-button"
-                  >
+                  <button onClick={() => openModal('deleteComentario', c)} className="icon-button">
                     <Trash size={16} />
                   </button>
                 </div>
@@ -330,8 +293,6 @@ export default function Profile() {
         onSave={handleModalSave}
         onDelete={handleModalDelete}
       />
-      
-
     </div>
   );
 }

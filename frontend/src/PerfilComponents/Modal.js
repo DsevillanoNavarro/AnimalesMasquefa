@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
   useEffect(() => {
     if (!isOpen || !item) return;
     if (type === 'editAdopcion') {
-      setForm({pdf: null, texto: '' });
+      setForm({ pdf: null, texto: '' });
     } else if (type === 'editComentario') {
       setForm({ estado: '', pdf: null, texto: item.contenido || '' });
     }
@@ -39,12 +39,13 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
             {type === 'deleteAdopcion' && 'Eliminar adopción'}
             {type === 'editComentario' && 'Editar comentario'}
             {type === 'deleteComentario' && 'Eliminar comentario'}
+            {type === 'deleteCuenta' && 'Eliminar cuenta'}
           </h2>
           <button className="modal-close-button" onClick={onClose} aria-label="Cerrar modal">×</button>
         </header>
 
         <div className="modal-body">
-          {(type === 'editAdopcion' && (
+          {type === 'editAdopcion' && (
             <>
               {item.contenido && (
                 <iframe
@@ -59,11 +60,13 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
                 <input type="file" name="pdf" accept="application/pdf" onChange={handleChange} />
               </label>
             </>
-          )) ||
-          (type === 'deleteAdopcion' && (
+          )}
+
+          {type === 'deleteAdopcion' && (
             <p>¿Seguro que quieres eliminar esta adopción?</p>
-          )) ||
-          (type === 'editComentario' && (
+          )}
+
+          {type === 'editComentario' && (
             <>
               {item.parent_contenido && (
                 <p className="text-muted" style={{ marginBottom: '10px' }}>
@@ -93,40 +96,53 @@ export default function Modal({ isOpen, onClose, type, item, onSave, onDelete })
                 <textarea name="texto" value={form.texto} onChange={handleChange} rows={4} />
               </label>
             </>
-          )) ||
-          (type === 'deleteComentario' && (
+          )}
+
+          {type === 'deleteComentario' && (
             <p>¿Seguro que quieres eliminar este comentario?</p>
-          ))}
+          )}
+
+          {type === 'deleteCuenta' && (
+            <p>¿Seguro que quieres eliminar tu cuenta? Esta acción es irreversible.</p>
+          )}
         </div>
 
         <footer className="modal-footer">
           <button onClick={onClose}>Cancelar</button>
+
           {type.startsWith('edit') && (
-              <button
-                onClick={handleSave}
-                disabled={
-                  (type === 'editAdopcion' && !form.pdf) ||
-                  (type === 'editComentario' && form.texto.trim() === item.contenido.trim())
-                }
-              >
-                Guardar
-              </button>
-            )}
+            <button
+              onClick={handleSave}
+              disabled={
+                (type === 'editAdopcion' && !form.pdf) ||
+                (type === 'editComentario' && form.texto.trim() === item.contenido.trim())
+              }
+            >
+              Guardar
+            </button>
+          )}
 
-            {type.startsWith('delete') && (
-              <button onClick={handleDelete}>Eliminar</button>
-            )}
-
-                    </footer>
-                  </div>
-                </div>
-              );
-            }
+          {type.startsWith('delete') && (
+            <button onClick={handleDelete}>
+              {type === 'deleteCuenta' ? 'Eliminar cuenta' : 'Eliminar'}
+            </button>
+          )}
+        </footer>
+      </div>
+    </div>
+  );
+}
 
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(['editAdopcion','deleteAdopcion','editComentario','deleteComentario']),
+  type: PropTypes.oneOf([
+    'editAdopcion',
+    'deleteAdopcion',
+    'editComentario',
+    'deleteComentario',
+    'deleteCuenta' // 👈 añadido aquí
+  ]),
   item: PropTypes.object,
   onSave: PropTypes.func,
   onDelete: PropTypes.func
