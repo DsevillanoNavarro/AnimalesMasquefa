@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useMemo } from "react";
 import noticiaService from "../services/noticiaService";
-import { useLoading } from "../contexts/LoadingContext"; // Igual que en CatGallery
+import { useLoading } from "../contexts/LoadingContext";
 import "./NoticiasListado.css";
 
 const NoticiasRecientes = () => {
   const [noticias, setNoticias] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const [ordenFecha, setOrdenFecha] = useState("desc");
+  const [busqueda, setBusqueda] = useState("");
   const noticiasPorPagina = 6;
 
-  const { loading, setLoading } = useLoading(); // Mismo hook
+  const { loading, setLoading } = useLoading();
 
   useEffect(() => {
     setLoading(true);
@@ -29,22 +30,36 @@ const NoticiasRecientes = () => {
       });
   }, [setLoading]);
 
+  const noticiasFiltradas = useMemo(() => {
+    return noticias.filter((n) =>
+      n.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
+      n.contenido.toLowerCase().includes(busqueda.toLowerCase())
+    );
+  }, [noticias, busqueda]);
+
   const noticiasOrdenadas = useMemo(() => {
-    const copia = [...noticias];
-    return copia.sort((a, b) => {
-      const fechaA = new Date(a.fecha_publicacion); // ✅ usa el campo correcto
-      const fechaB = new Date(b.fecha_publicacion);
-      return ordenFecha === "desc" ? fechaB - fechaA : fechaA - fechaB;
-    });
-  }, [noticias, ordenFecha]);
+  const copia = [...noticiasFiltradas];
+
+  return copia.sort((a, b) => {
+    const fechaA = new Date(a.fecha_publicacion).getTime() || 0;
+    const fechaB = new Date(b.fecha_publicacion).getTime() || 0;
+
+    if (ordenFecha === "desc") {
+      return fechaA - fechaB;
+    } else {
+      return fechaB - fechaA;
+    }
+  });
+}, [noticiasFiltradas, ordenFecha]);
+
 
   const indexInicio = (paginaActual - 1) * noticiasPorPagina;
   const noticiasPaginadas = noticiasOrdenadas.slice(indexInicio, indexInicio + noticiasPorPagina);
   const totalPaginas = Math.ceil(noticiasOrdenadas.length / noticiasPorPagina);
 
   return (
-    <div className="container HomeNoticiasContainer news-gallery py-4 ">
-      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap ">
+    <div className="container HomeNoticiasContainer news-gallery py-4">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <h2 className="gallery-title mb-3 mb-md-0">ÚLTIMAS NOTICIAS</h2>
         <select
           className="custom-select"
@@ -57,6 +72,20 @@ const NoticiasRecientes = () => {
           <option value="desc">Más recientes</option>
           <option value="asc">Más antiguas</option>
         </select>
+      </div>
+
+      {/* Campo de búsqueda */}
+      <div className="mb-4">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Buscar por título o contenido..."
+          value={busqueda}
+          onChange={(e) => {
+            setBusqueda(e.target.value);
+            setPaginaActual(1);
+          }}
+        />
       </div>
 
       <div className="row gx-4 justify-content-center fade-in">
