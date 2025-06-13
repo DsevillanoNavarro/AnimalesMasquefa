@@ -151,7 +151,7 @@ class Adopcion(models.Model):
 
 
 class CustomUser(AbstractUser):
-    foto_perfil = models.ImageField(upload_to='usuarios/perfiles/', null=True, blank=True, default='usuarios/default.jpg')
+    foto_perfil = models.ImageField(upload_to='usuarios/perfiles/', null=True, blank=True, default='usuarios/perfiles/default.jpg')
     recibir_novedades = models.BooleanField(default=False)
 
     def __str__(self):

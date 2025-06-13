@@ -105,11 +105,25 @@ const UsuarioForm = () => {
       }, 3000); // redirige después de 3 segundos
     
     } catch (err) {
-      const backendMessage =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        "No se pudo completar el registro. Verifica los datos ingresados o intenta más tarde.";
-      setError(backendMessage);
+      if (err.response?.data) {
+          const data = err.response.data;
+          const fieldErrors = {};
+
+          // Recorremos los errores por campo
+          Object.entries(data).forEach(([campo, mensajes]) => {
+            if (Array.isArray(mensajes)) {
+              fieldErrors[campo] = mensajes[0];  // Solo mostramos el primer error
+            } else {
+              fieldErrors[campo] = mensajes;
+            }
+          });
+
+          setFormErrors(fieldErrors);  // ← Tú debes tener este estado definido para mostrar los errores en los inputs
+
+        } else {
+          setError("No se pudo completar el registro. Verifica los datos ingresados o intenta más tarde.");
+        }
+
     }
   };
 
