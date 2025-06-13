@@ -197,6 +197,12 @@ npm test
 * **Backend**: Render.com (Gunicorn, PostgreSQL).
 * **Frontend**: Netlify (SPA completa con configuración de redirecciones).
 
+## 🔗 Recursos Externos
+
+- 🧠 Consulta el proyecto también en DeepWiki:  
+  [https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa](https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa)
+
+  
 ---
 
 ## 🤝 Contribuir

@@ -26,18 +26,25 @@ from .throttles import UserRateThrottle, CrearAdopcionThrottle
 from rest_framework.exceptions import Throttled
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsAdminOrReadOnly
+from rest_framework.exceptions import PermissionDenied
+from rest_framework import mixins, viewsets
 
 User = get_user_model()
 token_generator = PasswordResetTokenGenerator()
 
-
 class AnimalViewSet(viewsets.ModelViewSet):
     queryset = Animal.objects.all().order_by('-fecha_nacimiento')
     serializer_class = AnimalSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
     
 class NoticiaViewSet(viewsets.ModelViewSet):
-    queryset = Noticia.objects.all().order_by('-fecha_publicacion')  # 🡨 orden por fecha más reciente
+    queryset = Noticia.objects.all().order_by('-fecha_publicacion')
     serializer_class = NoticiaSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
 
 
 class ComentarioViewSet(viewsets.ModelViewSet):
@@ -58,11 +65,25 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+    
+    def perform_update(self, serializer):
+        if serializer.instance.usuario != self.request.user:
+            raise PermissionDenied("No puedes editar comentarios de otro usuario.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.usuario != self.request.user:
+            raise PermissionDenied("No puedes eliminar comentarios de otro usuario.")
+        instance.delete()
 
 
 class AdopcionViewSet(viewsets.ModelViewSet):
     queryset = Adopcion.objects.all()
     serializer_class = AdopcionSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Adopcion.objects.filter(usuario=self.request.user)
 
     def get_throttles(self):
         if self.request.method == 'POST':
@@ -97,10 +118,21 @@ class AdopcionViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("No puedes crear una adopción en nombre de otro usuario.")
 
         serializer.save()
+    
+    def perform_update(self, serializer):
+        if serializer.instance.usuario != self.request.user:
+            raise PermissionDenied("No puedes modificar esta adopción.")
+        serializer.save()
 
-class UsuarioViewSet(viewsets.ModelViewSet):
+    def perform_destroy(self, instance):
+        if instance.usuario != self.request.user:
+            raise PermissionDenied("No puedes eliminar esta adopción.")
+        instance.delete()
+
+class UsuarioViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
+    permission_classes = [AllowAny]
     
 
 

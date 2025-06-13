@@ -68,11 +68,11 @@ MIDDLEWARE = [
 AUTH_USER_MODEL = 'appmustafa.CustomUser'
 JET_INDEX_DASHBOARD = 'animalesmasquefa.dashboard.CustomIndexDashboard'
 
-CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = os.environ.get('FRONTEND_URL', '').split(',') if os.environ.get('FRONTEND_URL') else []
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'animalesmasquefa.urls'
-
 JET_DASHBOARD_ENABLE_PERSISTENT = False
 
 TEMPLATES = [
@@ -105,6 +105,9 @@ DATABASES = {
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'appmustafa.authentication.CookieJWTAuthentication',
     ),
@@ -114,6 +117,7 @@ REST_FRAMEWORK = {
             'login': '1/min',
             'user': '1/hour', 
     }
+        
 }
 
 SIMPLE_JWT = {
