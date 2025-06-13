@@ -23,20 +23,7 @@ const getAdopcionesPorAnimal = async (animalId) => {
 // Obtener adopciones de un usuario concreto
 // Si el backend no respeta filtro de query, aplicamos filtro en frontend
 const getAdopcionesPorUsuario = async (usuarioId) => {
-  try {
-    // Intentamos filtro por query param 'usuario'
-    let ads = await getAdopciones({ usuario: usuarioId });
-    // Si la API devuelve todas las adopciones (sin filtrar)
-    if (Array.isArray(ads) && ads.some(a => a.usuario && ![usuarioId].includes(a.usuario))) {
-      ads = await getAdopciones();
-      return ads.filter(a => a.usuario === usuarioId);
-    }
-    return ads;
-  } catch (error) {
-    // Fallback: obtener todas y filtrar
-    const all = await getAdopciones();
-    return all.filter(a => a.usuario === usuarioId);
-  }
+  return getAdopciones({ usuario: usuarioId });
 };
 
 // Crear una nueva adopción (incluye subida de PDF)

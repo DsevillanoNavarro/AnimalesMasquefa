@@ -83,7 +83,16 @@ class AdopcionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Adopcion.objects.select_related("animal").filter(usuario=self.request.user)
+        user_id = self.request.query_params.get('usuario')
+        if user_id:
+            return (
+                Adopcion.objects
+                .filter(usuario_id=user_id)
+                .select_related('animal', 'usuario')  # 👈 importante
+                .order_by('-fecha_hora')
+            )
+        return Adopcion.objects.none()
+
 
     def get_throttles(self):
         if self.request.method == 'POST':

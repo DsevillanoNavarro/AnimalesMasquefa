@@ -244,14 +244,7 @@ export default function Profile() {
           <div className="profile-card-grid">
             {adopciones.map(a => (
               <div key={a.id} className="profile-card">
-                {user.foto_perfil && (
-                  <img
-                    alt="Foto de Adopcion"
-                    src={`${process.env.REACT_APP_BACK_URL}${user.foto_perfil}`}
-                    onError={(e) => (e.target.style.display = 'none')}
-                    loading="lazy"
-                  />
-                )}
+                <img src={a.animal?.imagen || ''} alt={a.animal?.nombre} className="profile-card-img" />
                 <div className="profile-card-body">
                   <h3>{a.animal?.nombre || '—'}</h3>
                   <p>Estado: <span>{a.aceptada}</span></p>

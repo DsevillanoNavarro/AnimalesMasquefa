@@ -121,8 +121,8 @@ class Adopcion(models.Model):
         ('Pendiente', 'Pendiente'),
     ]
 
-    animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name="adopciones")
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="adopciones")
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name="adopciones", db_index=True)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="adopciones", db_index=True)
     fecha_hora = models.DateTimeField(auto_now_add=True)
     aceptada = models.CharField(max_length=10, choices=ESTADOS_ADOPCION, default='Pendiente')
     contenido = models.FileField(upload_to=pdf_upload_path, validators=[validate_pdf])
