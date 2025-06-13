@@ -98,11 +98,18 @@ class ComentarioSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("El comentario no puede estar vacío.")
         return value
 
+class AnimalSlimSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Animal
+        fields = ['id', 'nombre', 'imagen']
 
 class AdopcionSerializer(serializers.ModelSerializer):
+    animal = AnimalSlimSerializer(read_only=True)
+
     class Meta:
         model = Adopcion
         fields = '__all__'
+
 
     def validate(self, data):
         usuario = data.get('usuario')

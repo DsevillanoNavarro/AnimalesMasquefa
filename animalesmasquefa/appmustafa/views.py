@@ -81,9 +81,9 @@ class AdopcionViewSet(viewsets.ModelViewSet):
     queryset = Adopcion.objects.all()
     serializer_class = AdopcionSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def get_queryset(self):
-        return Adopcion.objects.filter(usuario=self.request.user)
+        return Adopcion.objects.select_related("animal").filter(usuario=self.request.user)
 
     def get_throttles(self):
         if self.request.method == 'POST':

@@ -25,19 +25,13 @@ const getComentarios = async (filters = {}) => {
  * Obtener comentarios de un usuario autenticado (usa el username obtenido del perfil)
  * @returns {Promise<Array>} Comentarios filtrados
  */
+// ✅ versión segura y rápida
 const getComentariosPorUsuario = async (usuarioId) => {
-  try {
-    let comments = await getComentarios({ usuario: usuarioId });
-    if (comments.some(c => c.usuario !== usuarioId)) {
-      const all = await getComentarios();
-      return all.filter(c => c.usuario === usuarioId);
-    }
-    return comments;
-  } catch {
-    const all = await getComentarios();
-    return all.filter(c => c.usuario === usuarioId);
-  }
+  if (!usuarioId) throw new Error("Usuario requerido");
+  const comments = await getComentarios({ usuario: usuarioId });
+  return comments;
 };
+
 
 
 /**

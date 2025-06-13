@@ -38,17 +38,7 @@ export default function Profile() {
       comentarioService.getComentariosPorUsuario(user.id)
     ])
       .then(async ([ads, coms]) => {
-        const enriched = await Promise.all(
-          ads.map(async a => {
-            try {
-              const { data } = await animalService.getAnimal(a.animal);
-              return { ...a, animal: data };
-            } catch {
-              return { ...a, animal: null };
-            }
-          })
-        );
-        setAdopciones(enriched);
+        setAdopciones(ads);
         setComentarios(Array.isArray(coms) ? coms : coms.data);
       })
       .catch(() => setDataError('Error al cargar datos'))
@@ -254,7 +244,14 @@ export default function Profile() {
           <div className="profile-card-grid">
             {adopciones.map(a => (
               <div key={a.id} className="profile-card">
-                <img src={a.animal?.imagen || ''} alt={a.animal?.nombre} className="profile-card-img" />
+                {user.foto_perfil && (
+                  <img
+                    alt="Foto de Adopcion"
+                    src={`${process.env.REACT_APP_BACK_URL}${user.foto_perfil}`}
+                    onError={(e) => (e.target.style.display = 'none')}
+                    loading="lazy"
+                  />
+                )}
                 <div className="profile-card-body">
                   <h3>{a.animal?.nombre || '—'}</h3>
                   <p>Estado: <span>{a.aceptada}</span></p>
