@@ -130,9 +130,13 @@ class AdopcionViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 class UsuarioViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.none() 
     serializer_class = UsuarioSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
     
 
 
@@ -192,7 +196,6 @@ class CookieTokenRefreshView(TokenRefreshView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def protected_view(request):
-    # Si llegas aquí, el token en la cookie es válido
     return Response({'message': 'Acceso concedido: tu token es válido.'})
 
 
@@ -210,7 +213,7 @@ class ProfileView(APIView):
 
 class RequestPasswordResetAPIView(generics.GenericAPIView):
     throttle_classes = [UserRateThrottle]
-    permission_classes = []
+    permission_classes = [AllowAny]
     serializer_class = PasswordResetRequestSerializer    
 
     def post(self, request):
@@ -218,11 +221,10 @@ class RequestPasswordResetAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
 
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            # Respuesta genérica para evitar revelar existencia del email
+        user = User.objects.filter(email=email).first()
+        if not user:
             return Response({"detail": "Si existe, recibirás un email."}, status=200)
+
 
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = token_generator.make_token(user)

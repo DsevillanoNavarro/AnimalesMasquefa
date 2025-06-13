@@ -120,6 +120,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'first_name', 'last_name', 
             'password', 'foto_perfil', 'recibir_novedades', 'is_staff'
         ]
+        read_only_fields = ['is_staff']
         extra_kwargs = {
             'password': {'write_only': True},
             'recibir_novedades': {'required': False},

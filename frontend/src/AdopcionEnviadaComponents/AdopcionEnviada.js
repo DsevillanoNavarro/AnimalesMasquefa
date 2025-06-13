@@ -40,7 +40,7 @@ const ConfirmacionAdopcion = () => {
       </div>
 
       <button
-        className="custom-btn mt-4"
+        className="custom-btn mt-4 mb-5"
         onClick={() => navigate("/animales")}
       >
         Volver al listado de animales

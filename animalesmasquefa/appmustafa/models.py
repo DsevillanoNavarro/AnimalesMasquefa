@@ -157,8 +157,3 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-# ——— Después de definir **todas** tus clases, las registras: ———
-auditlog.register(Animal)
-auditlog.register(Noticia)
-auditlog.register(Comentario)
-auditlog.register(Adopcion)
