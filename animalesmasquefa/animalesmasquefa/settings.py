@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework
     'rest_framework_simplejwt',  # Autenticación vía JWT
     'auditlog',  # Auditoría de cambios en modelos
+    'drf_yasg',  # Documentación Swagger para la API
 ]
 
 # ----------------------- Middleware -----------------------
