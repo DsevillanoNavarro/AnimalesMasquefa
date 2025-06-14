@@ -116,17 +116,14 @@ class AdopcionViewSet(viewsets.ModelViewSet):
 
     # Filtrado para obtener adopciones por usuario
     def get_queryset(self):
-        user_id = self.request.query_params.get('usuario')
-        if user_id:
-            # Filtra adopciones de un usuario específico, y usa select_related para optimizar consultas relacionadas
-            return (
-                Adopcion.objects
-                .filter(usuario_id=user_id)
-                .select_related('animal', 'usuario')  # Optimiza consulta para relaciones foráneas
-                .order_by('-fecha_hora')  # Orden descendente por fecha
-            )
-        # Si no hay filtro, no devolver nada (por seguridad)
-        return Adopcion.objects.none()
+        user = self.request.user
+        return (
+            Adopcion.objects
+            .filter(usuario=user)
+            .select_related('animal', 'usuario')
+            .order_by('-fecha_hora')
+        )
+
 
     # Aplicar throttling en la creación de adopciones para limitar solicitudes
     def get_throttles(self):
@@ -182,14 +179,37 @@ class AdopcionViewSet(viewsets.ModelViewSet):
 
 
 # ViewSet para manejo de usuarios, solo para creación (registro)
-class UsuarioViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.none()  # No lista usuarios, solo crea
-    serializer_class = UsuarioSerializer
-    permission_classes = [AllowAny]  # Permite registro público sin autenticación
+# Definimos una vista basada en ViewSet personalizada para manejar operaciones relacionadas con el modelo User.
+class UsuarioViewSet(
+    mixins.CreateModelMixin,         # Permite crear nuevos usuarios (POST).
+    mixins.RetrieveModelMixin,      # Permite recuperar un usuario específico (GET /usuarios/<id>/).
+    mixins.UpdateModelMixin,        # Permite actualizar información del usuario (PUT/PATCH).
+    viewsets.GenericViewSet         # Provee la funcionalidad básica de un ViewSet sin CRUD completo.
+):
+    queryset = User.objects.all()  # Consulta base: todos los usuarios. (Spoiler: no todos podrán verse).
+    serializer_class = UsuarioSerializer  # Serializador que define cómo se transforma el objeto User a JSON.
 
-    # Al crear usuario, simplemente guardar
-    def perform_create(self, serializer):
-        serializer.save()
+    def get_permissions(self):
+        # Define permisos por acción: cualquiera puede crear usuario (registro), el resto requiere autenticación.
+        if self.action == 'create':
+            return [AllowAny()]  # Registro abierto. ¡Bienvenido, forastero!
+        return [IsAuthenticated()]  # Para todo lo demás, necesitas mostrar tus credenciales.
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()  # Obtenemos el usuario solicitado.
+        if user != request.user:
+            # Intento de ver el perfil ajeno: denegado con elegancia.
+            raise PermissionDenied("No puedes ver el perfil de otro usuario.")
+        serializer = self.get_serializer(user)  # Serializamos la data del usuario.
+        return Response(serializer.data)  # Devolvemos su perfil como respuesta (porque se portó bien).
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()  # Obtenemos el usuario a actualizar.
+        if user != request.user:
+            # Nada de travesuras. Cada quien edita su perfil y punto.
+            raise PermissionDenied("No puedes editar el perfil de otro usuario.")
+        return super().update(request, *args, **kwargs)  # Si es su perfil, continúa con la actualización.
+
 
 
 # Vista para obtener tokens JWT y enviarlos en cookies seguras HTTP-only

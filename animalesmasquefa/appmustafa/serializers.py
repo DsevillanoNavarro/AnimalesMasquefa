@@ -107,7 +107,10 @@ class AnimalSlimSerializer(serializers.ModelSerializer):
 # ------------------------ SERIALIZADOR DE ADOPCIONES ------------------------
 
 class AdopcionSerializer(serializers.ModelSerializer):
-    animal = AnimalSlimSerializer(read_only=True)  # Relación con animal, pero de forma resumida
+    animal = AnimalSlimSerializer(read_only=True)
+    animal_id = serializers.PrimaryKeyRelatedField(
+        queryset=Animal.objects.all(), write_only=True, source='animal'
+    )
 
     class Meta:
         model = Adopcion

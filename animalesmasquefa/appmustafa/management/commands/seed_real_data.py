@@ -44,7 +44,7 @@ class Command(BaseCommand):
             user = CustomUser.objects.create_user(
                 username=fake.user_name(),
                 email=fake.email(),
-                password='12345678',
+                password='Kilobyte1',
                 recibir_novedades=random.choice([True, False])
             )
             usuarios.append(user)
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                 animal = Animal(
                     nombre=fake.first_name(),
                     fecha_nacimiento=fecha_nacimiento,
-                    situacion=fake.paragraph(nb_sentences=50)
+                    situacion=fake.paragraph(nb_sentences=15)
                 )
                 animal.imagen.save(imagen_file, File(f))
                 animal.save()

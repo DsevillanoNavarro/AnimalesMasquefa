@@ -41,14 +41,14 @@ const createUsuario = (usuarioData) => {
 
 // Función para actualizar un usuario existente parcialmente
 const updateUsuario = (id, formData) => {
-  // Se espera que formData ya esté preparado, puede incluir campos y archivos (multipart/form-data)
   return axios.patch(`${API_URL}${id}/`, formData, {
     headers: {
-      // Indicamos que el contenido es multipart/form-data para que el backend lo interprete bien
       'Content-Type': 'multipart/form-data',
     },
+    withCredentials: true,  // 🔥 esto es lo que faltaba
   });
 };
+
 
 // Función para eliminar un usuario por su ID
 const deleteUsuario = (id) => {
