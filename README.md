@@ -32,7 +32,7 @@ root/
 * **Django 5**, **Python 3.x**, **DRF**
 * **PostgreSQL**, **Gunicorn**, **Whitenoise**
 * **Django Auditlog**: Trazabilidad de acciones
-* **Grappelli + Jet Dashboard**: UI avanzada en admin
+* **Jet Dashboard**: UI avanzada en admin
 * **Swagger + Redoc**: Documentación REST interactiva
 * **Comandos custom**:
 
