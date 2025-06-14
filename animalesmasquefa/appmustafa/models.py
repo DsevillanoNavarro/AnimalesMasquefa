@@ -10,21 +10,10 @@ from PIL import Image  # Pillow, para procesar imágenes
 from io import BytesIO
 from django.core.files.base import ContentFile  # Para crear archivos desde memoria
 
-# Función para comprimir imágenes antes de guardarlas
-def compress_image(image):
-    img = Image.open(image)               # Abre la imagen
-    img = img.convert('RGB')              # Convierte a RGB (evita errores con PNGs con transparencia)
-    img.thumbnail((1024, 1024))           # Redimensiona manteniendo proporción, máximo 1024px
-    buffer = BytesIO()                    # Crea un buffer de memoria
-    img.save(buffer, format='JPEG', quality=80)  # Guarda en el buffer como JPEG de calidad media
-    return ContentFile(buffer.getvalue(), name=image.name)  # Retorna el archivo listo para guardar
-
-# Ejemplo de uso dentro de un modelo con atributo `imagen`
-def save(self, *args, **kwargs):
-    if self.imagen:
-        self.imagen = compress_image(self.imagen)  # Comprime la imagen antes de guardar
-    super().save(*args, **kwargs)
-
+# Librerías de Cloudinary
+import cloudinary
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from cloudinary.models import CloudinaryField
 
 # ==============================
 # Modelo Animal
@@ -34,7 +23,8 @@ class Animal(models.Model):
     fecha_nacimiento = models.DateField()     # Fecha de nacimiento
     edad = models.PositiveIntegerField(editable=False, null=True, blank=True)  # Edad calculada automáticamente
     situacion = models.TextField(max_length=750)  # Descripción o situación actual del animal
-    imagen = models.ImageField(upload_to='animales/')  # Imagen del animal
+    # Imagen en Cloudinary
+    imagen = CloudinaryField('imagen', folder='animales')
 
     class Meta:
         verbose_name = 'Animal'
@@ -69,7 +59,8 @@ class Animal(models.Model):
 # ==============================
 class Noticia(models.Model):
     titulo = models.CharField(max_length=100)              # Título de la noticia
-    imagen = models.ImageField(upload_to='noticias/')      # Imagen relacionada
+    # Imagen en Cloudinary
+    imagen = CloudinaryField('imagen', folder='noticias')  # Imagen relacionada
     contenido = models.TextField(max_length=1000)          # Texto de la noticia
     fecha_publicacion = models.DateField()                 # Fecha de publicación
 
@@ -119,7 +110,7 @@ class Comentario(models.Model):
 # Validación y path para PDF en adopciones
 # ==============================
 def validate_pdf(file):
-    if not file.name.endswith('.pdf'):
+    if not file.name.lower().endswith('.pdf'):
         raise ValidationError("Solo se permiten archivos PDF.")
 
 # Define el path de subida del PDF usando el ID del usuario
@@ -141,14 +132,19 @@ class Adopcion(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="adopciones", db_index=True)  # Usuario adoptante
     fecha_hora = models.DateTimeField(auto_now_add=True)  # Fecha de solicitud
     aceptada = models.CharField(max_length=10, choices=ESTADOS_ADOPCION, default='Pendiente')  # Estado actual
-    contenido = models.FileField(upload_to=pdf_upload_path, validators=[validate_pdf])  # PDF con formulario o info
+    # PDF con formulario o info en Cloudinary como recurso raw
+    contenido = models.FileField(
+        upload_to=pdf_upload_path,
+        storage=RawMediaCloudinaryStorage(),
+        validators=[validate_pdf]
+    )
 
     class Meta:
         verbose_name = 'Adopcion'
         verbose_name_plural = 'Adopciones'
 
     def __str__(self):
-        return self.animal.nombre + " por " + self.usuario.username
+        return f"{self.animal.nombre} por {self.usuario.username}"
 
     # Validaciones personalizadas
     def clean(self):
@@ -171,8 +167,21 @@ class Adopcion(models.Model):
 # Modelo CustomUser
 # ==============================
 class CustomUser(AbstractUser):
-    foto_perfil = models.ImageField(upload_to='usuarios/perfiles/', null=True, blank=True, default='usuarios/perfiles/default.jpg')  # Avatar o foto del perfil
+    # Avatar o foto del perfil en Cloudinary
+    foto_perfil = CloudinaryField(
+        'foto_perfil',
+        folder='usuarios/perfiles',
+        default='usuarios/perfiles/default.jpg', 
+        blank=True
+        )
     recibir_novedades = models.BooleanField(default=False)  # Boletín de novedades, etc.
 
     def __str__(self):
         return self.username
+
+# Registro para auditoría si se utiliza auditlog
+auditlog.register(Animal)
+auditlog.register(Noticia)
+auditlog.register(Comentario)
+auditlog.register(Adopcion)
+auditlog.register(CustomUser)

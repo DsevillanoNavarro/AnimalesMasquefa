@@ -182,6 +182,7 @@ python manage.py test
 
 * DeepWiki del proyecto: [https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa](https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa)
 * Swagger UI disponible en `/swagger/` (requiere login admin)
+* Redoc UI disponible en `/redoc/` (requiere login admin)
 
 ---
 

@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Clave secreta para la instancia de Django (nunca exponer en producción)
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
 # Habilitar/deshabilitar modo debug (True para desarrollo, False en producción)
-DEBUG = os.environ.get('DEBUG')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
 
 # Hosts permitidos para el despliegue
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',  # Autenticación vía JWT
     'auditlog',  # Auditoría de cambios en modelos
     'drf_yasg',  # Documentación Swagger para la API
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 # ----------------------- Middleware -----------------------
@@ -194,6 +196,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Tipo de ID por defecto
 
 MEDIA_URL = '/media/'  # URL para archivos multimedia (subidos por usuarios)
 MEDIA_ROOT = BASE_DIR / 'media'  # Ruta física para archivos multimedia
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
 
 # ----------------------- Correo electrónico -----------------------
 

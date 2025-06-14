@@ -59,5 +59,4 @@ urlpatterns = [
     
 ]
 
-# Configura la entrega de archivos multimedia en modo desarrollo
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
