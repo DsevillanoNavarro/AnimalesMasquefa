@@ -124,6 +124,7 @@ const UsuarioForm = () => {
       }, 1500);
 
     } catch (err) {
+      setIsSubmitting(false);
       // Si hay respuesta con errores del backend, procesarlos para mostrarlos
       if (err.response?.data) {
         setIsSubmitting(false);
@@ -251,8 +252,8 @@ const UsuarioForm = () => {
 
       {/* Botón para enviar formulario */}
       <button type="submit" className="login-btn" disabled={isSubmitting}>
-        {isSubmitting ? "Registrando..." : "Registrar"}
-      </button>
+      {isSubmitting ? "Registrando..." : "Registrar"}
+    </button>
 
       {/* Mensaje de éxito */}
       {successMessage && (
