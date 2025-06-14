@@ -1,122 +1,138 @@
+/* Contenedor principal de la galería de gatos */
 .cat-gallery {
-    font-family: 'Afacad', sans-serif;
-    background-color: white;
-  }
-  
-  .HomeCatsContainer {
-    margin-top: 4%;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  
+  font-family: 'Afacad', sans-serif; /* Fuente personalizada para todo el contenedor */
+  background-color: white; /* Fondo blanco */
+}
 
-  
-  .cat-image-container {
-    position: relative;
-    overflow: hidden;
+/* Contenedor principal dentro de la página de inicio para gatos */
+.HomeCatsContainer {
+  margin-top: 4%; /* Margen superior */
+  max-width: 80%; /* Ancho máximo relativo al contenedor padre */
+  margin-left: auto; /* Centrar horizontalmente */
+  margin-right: auto;
+  padding-left: 15px; /* Relleno interno a la izquierda */
+  padding-right: 15px; /* Relleno interno a la derecha */
+}
+
+/* Contenedor individual para cada imagen de gato */
+.cat-image-container {
+  position: relative; /* Posicionamiento relativo para el overlay */
+  overflow: hidden; /* Ocultar contenido que sobresalga */
+}
+
+/* Imagen del gato */
+.cat-image {
+  border-radius: 4px; /* Bordes ligeramente redondeados */
+  max-height: 50%; /* Altura máxima relativa */
+  object-fit: cover; /* La imagen cubre el espacio sin deformarse */
+  width: 100%; /* Ancho completo del contenedor */
+  transition: transform 0.3s ease; /* Transición suave para efectos */
+}
+
+/* Efecto zoom cuando se pasa el cursor sobre la imagen */
+.cat-image-container:hover .cat-image {
+  transform: scale(1.05); /* Escala la imagen al 105% */
+}
+
+/* Capa superpuesta (overlay) que aparece al pasar el cursor */
+.overlay {
+  border-radius: 4px; /* Bordes redondeados igual que la imagen */
+  position: absolute; /* Posicionamiento absoluto dentro del contenedor */
+  top: 0; /* Ubicación en la parte superior */
+  left: 0; /* Ubicación en la izquierda */
+  width: 100%; /* Ocupa todo el ancho */
+  height: 100%; /* Ocupa toda la altura */
+  background: rgba(255, 255, 255, 0.26); /* Fondo blanco translúcido */
+  display: flex; /* Usar flexbox para centrar contenido */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+  opacity: 0; /* Invisible por defecto */
+  transition: opacity 0.3s ease; /* Transición suave para la opacidad */
+}
+
+/* Mostrar el overlay al pasar el cursor sobre el contenedor */
+.cat-image-container:hover .overlay {
+  opacity: 1; /* Hacer visible */
+}
+
+/* Botón de adopción */
+.adopt-btn {
+  background-color: white; /* Fondo blanco */
+  border: none; /* Sin borde */
+  padding: 10px 20px; /* Relleno interno vertical y horizontal */
+  font-weight: bold; /* Texto en negrita */
+  font-size: 1rem; /* Tamaño de fuente normal */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+  transition: background-color 0.3s ease; /* Transición para cambio de fondo */
+  cursor: pointer; /* Cursor puntero para indicar clicable */
+}
+
+/* Cambio de fondo al pasar el cursor sobre el botón */
+.adopt-btn:hover {
+  background-color: #f1f1f1; /* Fondo gris claro */
+}
+
+/* Nombre del gato */
+.cat-name {
+  font-size: 24px; /* Tamaño de fuente grande */
+  font-weight: 500; /* Peso medio */
+}
+
+/* Media query para pantallas menores a 1400px */
+@media (max-width: 1400px) {
+  .gallery-title {
+    font-size: 40px; /* Reducir tamaño del título */
+    text-align: center; /* Centrar texto */
   }
-  
-  .cat-image {
-    border-radius: 4px;
-    max-height: 50%;
-    object-fit: cover;
-    width: 100%;
-    transition: transform 0.3s ease;
-  }
-  
-  .cat-image-container:hover .cat-image {
-    transform: scale(1.05);
-  }
-  
-  .overlay {
-    border-radius: 4px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.26);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .cat-image-container:hover .overlay {
-    opacity: 1;
-  }
-  
-  .adopt-btn {
-    background-color: white;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    font-size: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .adopt-btn:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .cat-name {
-    font-size: 24px;
-    font-weight: 500;
-  }
-  
-  @media (max-width: 1400px) {
-    .gallery-title {
-      font-size: 40px;
-      text-align: center;
-    }
-  }
-  .custom-select-wrapper {
-    position: relative;
-  }
-  
-  .custom-select {
-    appearance: none;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 10px 35px 10px 15px;
-    font-size: 16px;
-    border-radius: 8px;
-    font-family: 'Afacad', sans-serif;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-  }
-  
-  .custom-pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    gap: 10px;
-  }
-  
-  .custom-pagination .page-number {
-    cursor: pointer;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background-color: #eee;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    font-family: 'Afacad', sans-serif;
-  }
-  
-  .custom-pagination .page-number:hover {
-    background-color: #ccc;
-  }
-  
-  .custom-pagination .page-number.active {
-    background-color: black;
-    color: white;
-  }
-  
+}
+
+/* Wrapper para selector personalizado */
+.custom-select-wrapper {
+  position: relative; /* Posicionamiento para elementos internos */
+}
+
+/* Estilo para el selector personalizado */
+.custom-select {
+  appearance: none; /* Quitar estilo nativo del select */
+  background-color: white; /* Fondo blanco */
+  border: 1px solid #ccc; /* Borde gris claro */
+  padding: 10px 35px 10px 15px; /* Relleno: arriba, derecha (espacio para ícono), abajo, izquierda */
+  font-size: 16px; /* Tamaño de texto */
+  border-radius: 8px; /* Bordes redondeados */
+  font-family: 'Afacad', sans-serif; /* Misma fuente que la galería */
+  /* Ícono SVG para la flecha desplegable en el select */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat; /* Sin repetir imagen */
+  background-position: right 10px center; /* Posicionar a la derecha y centrado vertical */
+  background-size: 16px; /* Tamaño del ícono */
+}
+
+/* Contenedor para paginación personalizada */
+.custom-pagination {
+  display: flex; /* Mostrar elementos en línea con flexbox */
+  list-style: none; /* Quitar viñetas */
+  padding: 0; /* Sin padding */
+  gap: 10px; /* Separación entre números de página */
+}
+
+/* Estilo para cada número de página */
+.custom-pagination .page-number {
+  cursor: pointer; /* Cursor puntero para indicar clicable */
+  padding: 8px 14px; /* Relleno interno */
+  border-radius: 6px; /* Bordes redondeados */
+  background-color: #eee; /* Fondo gris claro */
+  font-weight: 500; /* Peso medio */
+  transition: background-color 0.2s ease; /* Transición para cambio de fondo */
+  font-family: 'Afacad', sans-serif; /* Fuente consistente */
+}
+
+/* Hover para los números de página */
+.custom-pagination .page-number:hover {
+  background-color: #ccc; /* Fondo gris más oscuro */
+}
+
+/* Estado activo del número de página */
+.custom-pagination .page-number.active {
+  background-color: black; /* Fondo negro */
+  color: white; /* Texto blanco */
+}

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+# Importación de módulos necesarios
 from pathlib import Path
 import os
 import dj_database_url
@@ -17,68 +18,82 @@ from datetime import timedelta
 from dotenv import load_dotenv  
 from django.utils.translation import gettext_lazy as _
 
+# Cargar variables de entorno desde un archivo .env
 load_dotenv()  
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+# Construcción del path base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# ----------------------- Seguridad -----------------------
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Clave secreta para la instancia de Django (nunca exponer en producción)
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Habilitar/deshabilitar modo debug (True para desarrollo, False en producción)
 DEBUG = os.environ.get('DEBUG')
 
+# Hosts permitidos para el despliegue
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
 
-
+# URL del frontend para usos cruzados (CORS, redirecciones, etc.)
 FRONTEND_URL = os.environ.get('FRONTEND_URL')
 
+# ----------------------- Aplicaciones instaladas -----------------------
+
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
-    'django.contrib.admin',
-    'django.contrib.auth',
+    'jet.dashboard',  # Dashboard personalizado
+    'jet',  # Panel de administración Jet
+    'django.contrib.admin',  # Admin por defecto de Django
+    'django.contrib.auth',  # Sistema de autenticación
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webpack_loader',
-    'appmustafa',
-    'corsheaders',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'auditlog',
+    'webpack_loader',  # Para integración con Webpack
+    'appmustafa',  # Aplicación principal del proyecto
+    'corsheaders',  # Manejo de CORS
+    'rest_framework',  # Django REST Framework
+    'rest_framework_simplejwt',  # Autenticación vía JWT
+    'auditlog',  # Auditoría de cambios en modelos
 ]
 
+# ----------------------- Middleware -----------------------
+
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Servir archivos estáticos en producción
+    'corsheaders.middleware.CorsMiddleware',  # Middleware para CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.locale.LocaleMiddleware', 
+    'django.middleware.locale.LocaleMiddleware',  # Soporte multilenguaje
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-
+# Modelo de usuario personalizado
 AUTH_USER_MODEL = 'appmustafa.CustomUser'
+
+# Ruta al dashboard personalizado de Jet
 JET_INDEX_DASHBOARD = 'animalesmasquefa.dashboard.CustomIndexDashboard'
 
+# ----------------------- CORS -----------------------
 
+# Dominios permitidos para solicitudes desde frontend
 CORS_ALLOWED_ORIGINS = os.environ.get('FRONTEND_URL', '').split(',') if os.environ.get('FRONTEND_URL') else []
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True  # Permitir el envío de cookies
+
+# ----------------------- Configuración de URLs -----------------------
 
 ROOT_URLCONF = 'animalesmasquefa.urls'
-JET_DASHBOARD_ENABLE_PERSISTENT = False
+JET_DASHBOARD_ENABLE_PERSISTENT = False  # No guardar estado del dashboard entre sesiones
+
+# ----------------------- Templates -----------------------
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [],  # Puedes incluir aquí rutas personalizadas de plantillas
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,11 +106,11 @@ TEMPLATES = [
     },
 ]
 
+# ----------------------- WSGI -----------------------
+
 WSGI_APPLICATION = 'animalesmasquefa.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+# ----------------------- Base de datos -----------------------
 
 DATABASES = {  
     'default': dj_database_url.config(  
@@ -103,6 +118,7 @@ DATABASES = {
     )  
 }
 
+# ----------------------- Django REST Framework -----------------------
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -111,30 +127,30 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'appmustafa.authentication.CookieJWTAuthentication',
     ),
-        'DEFAULT_THROTTLE_RATES': {
-            'comentario_creacion': '1/min',
-            'adopcion_creacion': '3/day',
-            'login': '1/min',
-            'user': '1/hour', 
+    'DEFAULT_THROTTLE_RATES': {  # Límites de uso por vista personalizada
+        'comentario_creacion': '1/min',
+        'adopcion_creacion': '3/day',
+        'login': '1/min',
+        'user': '1/hour', 
     }
-        
 }
 
+# ----------------------- JWT -----------------------
+
 SIMPLE_JWT = {
-    "AUTH_COOKIE": "access_token",         # Nombre de la cookie del access token
-    "AUTH_COOKIE_REFRESH": "refresh_token",# Nombre de la cookie del refresh token
-    "AUTH_COOKIE_SECURE": True,           # True en producción con HTTPS
+    "AUTH_COOKIE": "access_token",           # Cookie para el access token
+    "AUTH_COOKIE_REFRESH": "refresh_token",  # Cookie para el refresh token
+    "AUTH_COOKIE_SECURE": True,              # Requiere HTTPS si está en producción
     "AUTH_COOKIE_HTTP_ONLY": False,
     "AUTH_COOKIE_PATH": "/",
     "AUTH_COOKIE_SAMESITE": "None",
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # Duración del access token
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),     # Duración del refresh token
 }
 
+JET_DASHBOARD_CACHE_TIMEOUT = 0  # Desactiva cache en el dashboard Jet
 
-JET_DASHBOARD_CACHE_TIMEOUT = 0
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+# ----------------------- Validación de contraseñas -----------------------
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -151,40 +167,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ----------------------- Internacionalización -----------------------
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+LANGUAGE_CODE = 'es'  # Idioma por defecto: español
 
-LANGUAGE_CODE = 'es'  # Idioma por defecto en español
+TIME_ZONE = 'Europe/Madrid'  # Zona horaria
 
-TIME_ZONE = 'Europe/Madrid'  # O tu zona horaria
+USE_I18N = True  # Habilitar traducciones
+USE_L10N = True  # Formateo local
+USE_TZ = True    # Uso de zonas horarias
 
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-# Si quieres permitir varios idiomas (opcional)
-
-
+# Idiomas disponibles
 LANGUAGES = [
     ('es', _('Español')),
     ('en', _('Inglés')),
 ]
 
+# ----------------------- Archivos estáticos y media -----------------------
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = 'static/'  # URL para archivos estáticos
 
-STATIC_URL = 'static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Tipo de ID por defecto
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+MEDIA_URL = '/media/'  # URL para archivos multimedia (subidos por usuarios)
+MEDIA_ROOT = BASE_DIR / 'media'  # Ruta física para archivos multimedia
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# ----------------------- Correo electrónico -----------------------
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
 EMAIL_HOST = os.environ.get('EMAIL_HOST')  
@@ -193,7 +201,11 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+# ----------------------- Archivos estáticos en producción -----------------------
 
-BACKEND_URL = os.environ.get('BACKEND_URL')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directorio de recolección para staticfiles
+STATIC_URL = '/static/'  # URL para archivos estáticos
+
+# ----------------------- Backend URL (opcional) -----------------------
+
+BACKEND_URL = os.environ.get('BACKEND_URL')  # Útil para generar enlaces absolutos desde el backend
