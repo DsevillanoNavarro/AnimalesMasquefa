@@ -1,90 +1,138 @@
 # 🐾 AnimalesMasquefa
 
-**AnimalesMasquefa** es una plataforma web integral diseñada para la gestión eficiente y moderna de un refugio de animales. Este sistema fue desarrollado como Trabajo de Fin de Grado con el objetivo de cubrir todas las necesidades operativas y comunicacionales de una organización protectora de animales.
-
-Combina lo mejor del frontend con **React** y un potente backend en **Django**, junto a una arquitectura RESTful robusta y segura. Permite a usuarios y administradores navegar, gestionar y automatizar el ciclo completo de adopciones, noticias y relaciones con la comunidad.
+**AnimalesMasquefa** es una plataforma web full-stack desarrollada como Trabajo de Fin de Grado. Su objetivo es ofrecer una solución integral para la gestión de un refugio de animales. Integra funcionalidades administrativas, automatizaciones, y experiencia de usuario accesible, todo construido con una arquitectura moderna basada en Django y React.
 
 ---
 
-## 🧩 Características Clave
+## 🔄 Arquitectura General
 
-### 👥 Gestión de Usuarios
+* **Frontend**: React 18 + React Router + Axios + Lottie
+* **Backend**: Django 5 + Django REST Framework + PostgreSQL
+* **Autenticación**: JWT (SimpleJWT)
+* **Despliegue**: Netlify (frontend) y Render.com (backend)
+* **Base de datos**: PostgreSQL (hosteada en Render)
 
-* Registro, login y logout con JWT.
-* Recuperación y restablecimiento de contraseña.
-* Edición de perfil (nombre, email, foto, etc.).
-* Diferenciación clara entre **usuarios regulares** y **administradores**.
-* Auditlog completo de todas las operaciones sensibles.
-
-### 🐾 Animales
-
-* CRUD completo de animales desde panel administrativo.
-* Vista de detalle con datos como especie, edad, salud e historia.
-* Carga de imagen optimizada automáticamente con `browser-image-compression` en frontend.
-
-### 📨 Solicitudes de Adopción
-
-* Validaciones inteligentes para evitar duplicados.
-* Emails automáticos al enviar, aceptar o rechazar solicitudes.
-* Plantillas HTML con diseño profesional adaptado.
-* Panel de admin con filtros por estado: "Pendiente", "Aceptada", "Rechazada".
-
-### 📰 Sistema de Noticias
-
-* Sección de noticias destacadas en la página de inicio.
-* CRUD completo de publicaciones.
-* Notificación automática por correo para cada nueva noticia.
-
-### 💬 Comentarios Jerárquicos
-
-* Usuarios pueden comentar y responder a otros comentarios.
-* Backend robusto para gestión de moderación y eliminación.
-
-### ✉️ Emails y Notificaciones Automatizadas
-
-* Plantillas personalizadas para:
-
-  * Nueva solicitud de adopción.
-  * Aceptación o rechazo.
-  * Alta de nuevos animales o noticias.
-  * Mensajes desde formulario de contacto.
-
----
-
-## 📂 Estructura del Proyecto
-
-```bash
-dsevillanonavarro-animalesmasquefa/
-├── animalesmasquefa/         # Backend Django
-│   ├── appmustafa/           # App principal: modelos, views, auth, etc.
-│   ├── media/                # Archivos subidos
-│   ├── staticfiles/          # Recursos estáticos (JS, CSS, img)
-│   └── animalesmasquefa/     # Configuración, dashboard Jet, URLs, settings
-├── frontend/                 # SPA en React
-│   ├── public/               # index.html, manifiestos, redirecciones
+```
+root/
+├── animalesmasquefa/         # Backend
+│   ├── animalesmasquefa/     # Config global
+│   ├── appmustafa/           # App principal
+│   ├── media/, staticfiles/  # Archivos y recursos
+├── frontend/                 # React SPA
 │   └── src/                  # Componentes, servicios, rutas
-└── README.md                 # Este archivo
+└── README.md
 ```
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🔧 Stack Tecnológico
 
 ### Backend
 
-* **Python 3.x**, **Django 5**, **Django REST Framework**
-* **PostgreSQL** como base de datos relacional
-* **JWT** para autenticación y sesiones seguras
-* **Auditlog**, **Grappelli**, **Jet Dashboard**
-* **Gunicorn + Render.com** para despliegue
-* Swagger disponible (DRF-YASG) para documentación interactiva
+* **Django 5**, **Python 3.x**, **DRF**
+* **PostgreSQL**, **Gunicorn**, **Whitenoise**
+* **Django Auditlog**: Trazabilidad de acciones
+* **Grappelli + Jet Dashboard**: UI avanzada en admin
+* **Swagger + Redoc**: Documentación REST interactiva
+* **Comandos custom**:
+
+  * `migrar_archivos_a_cloudinary`
+  * `seed_real_data`
 
 ### Frontend
 
-* **React**, **React Router**, **Axios**
-* **Lottie** para animaciones SVG interactivas
-* **Netlify** como host para SPA
-* Optimizado con `browser-image-compression`
+* **React**, **SPA** con `react-router-dom`
+* **Axios**: Integración API
+* **Lottie**: Animaciones SVG
+* **Netlify**: Hosting y redirecciones automáticas
+* **Compresión de imágenes**: `browser-image-compression`
+
+---
+
+## 📂 Funcionalidades Principales
+
+### Usuarios y Autenticación
+
+* Registro, login, logout JWT
+* Recuperación y reseteo de contraseña
+* Roles diferenciados: usuario y administrador
+* Auditoría automática con `auditlog`
+
+### Animales
+
+* CRUD desde admin (Jet Dashboard)
+* Ficha detallada con imagen, especie, estado, historia
+* Compresión de imágenes client-side
+
+### Adopciones
+
+* Solicitudes con validación anti-duplicado
+* Emails HTML automáticos (aceptación/rechazo)
+* Panel administrativo con estados
+
+### Noticias
+
+* CRUD completo y notificaciones automáticas por email
+* Feed de noticias en portada
+
+### Comentarios
+
+* Sistema jerárquico (respuestas a comentarios)
+* Moderación desde el backend
+
+### Automatizaciones
+
+* Emails HTML responsivos (Jinja2 templates)
+* Plantillas para:
+
+  * Nuevas solicitudes
+  * Nuevos animales y noticias
+  * Contacto desde frontend
+
+---
+
+## 📅 Navegación Principal SPA
+
+* `/` - Inicio
+* `/adoptar` - Animales en adopción
+* `/detalle-animal/:id`
+* `/noticias` y `/detalle-noticia/:id`
+* `/perfil` - Gestión de usuario
+* `/contacto`, `/sobre-nosotros`
+* `/terminos-condiciones`, `/politica-privacidad`
+
+---
+
+## 🔢 Endpoints REST Destacados
+
+### Autenticación
+
+* `POST /api/token/`
+* `POST /api/token/refresh/`
+
+### Usuarios
+
+* `POST /api/usuarios/registro/`
+* `GET|PUT /api/usuarios/perfil/`
+
+### Animales
+
+* `GET|POST /api/animales/`
+* `GET|PUT|DELETE /api/animales/:id/`
+
+### Noticias
+
+* `GET|POST /api/noticias/`
+* `GET|PUT|DELETE /api/noticias/:id/`
+
+### Comentarios
+
+* `GET /api/comentarios/`
+* `POST /api/comentarios/`
+
+### Adopciones
+
+* `GET|POST /api/adopciones/`
 
 ---
 
@@ -93,11 +141,11 @@ dsevillanonavarro-animalesmasquefa/
 ### Backend
 
 ```bash
+cd animalesmasquefa
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-
-# Configurar archivo .env (ver .env.example)
+cp .env.example .env
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -113,57 +161,16 @@ npm start
 
 ---
 
-## 🔐 Variables de Entorno Clave
+## 🔒 Variables de Entorno (Backend & Frontend)
 
 * `SECRET_KEY`, `DEBUG`, `DATABASE_URL`, `FRONTEND_URL`
-* `.env` y `.env.example` incluidos en backend y frontend
+* `CLOUDINARY_URL` (si aplica para imágenes)
 
 ---
 
-## 📃 Endpoints REST Principales
+## 🔬 Testing
 
-Autenticación:
-
-* `POST /api/token/`
-* `POST /api/token/refresh/`
-* `POST /api/token/verify/`
-
-Usuarios:
-
-* `POST /api/usuarios/registro/`
-* `POST /api/usuarios/login/`
-* `GET /api/usuarios/perfil/`
-* `PUT /api/usuarios/perfil/`
-
-Animales:
-
-* `GET /api/animales/`
-* `GET /api/animales/:id/`
-* `POST /api/animales/`
-* `PUT /api/animales/:id/`
-* `DELETE /api/animales/:id/`
-
-Noticias:
-
-* `GET /api/noticias/`
-* `GET /api/noticias/:id/`
-* `POST /api/noticias/`
-* `PUT /api/noticias/:id/`
-* `DELETE /api/noticias/:id/`
-
-Comentarios:
-
-* `GET /api/comentarios/`
-* `POST /api/comentarios/`
-
-Adopciones:
-
-* `GET /api/adopciones/`
-* `POST /api/adopciones/`
-
----
-
-## 🧪 Testing
+### Django Tests
 
 ```bash
 python manage.py test
@@ -171,31 +178,41 @@ python manage.py test
 
 ---
 
-## 🌍 Despliegue
+## 🌎 Despliegue
 
-* **Backend:** Render.com (Gunicorn, PostgreSQL, Whitenoise)
-* **Frontend:** Netlify (SPA con soporte de redirecciones)
+### Backend
+
+* **Render.com**: PostgreSQL + Gunicorn + Whitenoise
+* Archivos estáticos servidos desde Django
+
+### Frontend
+
+* **Netlify**: SPA con soporte para rutas internas (`_redirects`)
 
 ---
 
 ## 🔗 Recursos
 
-* DeepWiki del proyecto: [https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa](https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa)
-* Swagger UI disponible en `/swagger/` (requiere login admin)
-* Redoc UI disponible en `/redoc/` (requiere login admin)
+* [DeepWiki del proyecto](https://deepwiki.com/DsevillanoNavarro/AnimalesMasquefa)
+* Swagger UI: `/swagger/`
+* Redoc UI: `/redoc/`
 
 ---
 
-## 🤝 Contribuciones
+## 👤 Contribuciones
 
 ```bash
-# 1. Haz fork
+# 1. Haz fork del repo
+git clone https://github.com/tuusuario/animalesmasquefa.git
+
 # 2. Crea una rama
- git checkout -b feature/nueva-feature
-# 3. Desarrolla y haz commit
- git commit -am "Agrega nueva feature"
+git checkout -b feature/nueva-feature
+
+# 3. Realiza cambios y haz commit
+git commit -am "Agrega nueva funcionalidad"
+
 # 4. Push y PR
- git push origin feature/nueva-feature
+git push origin feature/nueva-feature
 ```
 
 ---
@@ -206,4 +223,4 @@ Distribuido bajo licencia **MIT**.
 
 ---
 
-> "Adopta, no compres. Este proyecto conecta vidas." 🐶🐱
+> “Adopta, no compres. Este proyecto conecta vidas.” 🐶🐱
