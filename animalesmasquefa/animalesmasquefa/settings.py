@@ -94,7 +94,7 @@ JET_DASHBOARD_ENABLE_PERSISTENT = False  # No guardar estado del dashboard entre
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # Puedes incluir aquí rutas personalizadas de plantillas
+        'DIRS': [os.path.join(BASE_DIR, 'appmustafa', 'templates')],  # Puedes incluir aquí rutas personalizadas de plantillas
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -187,6 +187,8 @@ LANGUAGES = [
 # ----------------------- Archivos estáticos y media -----------------------
 
 STATIC_URL = 'static/'  # URL para archivos estáticos
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Tipo de ID por defecto
 

@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser  # Modelo de usuario personalizado
 from django import forms
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 # Define la URL del sitio visible en el panel de administración (por ejemplo, para redirigir al frontend)
 admin.site.site_url = getattr(settings, 'FRONTEND_URL', '/')
