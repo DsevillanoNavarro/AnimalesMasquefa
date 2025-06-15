@@ -205,6 +205,8 @@ Toda la documentación detallada del proyecto —incluyendo análisis, diseño, 
 
 Ahí encontrarás una guía completa del sistema, ideal para revisores técnicos, ampliaciones futuras o instalación en nuevos entornos.
 
+---
+
 ## 👤 Contribuciones
 
 ```bash
