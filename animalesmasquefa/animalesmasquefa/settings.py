@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'drf_yasg',  # Documentación Swagger para la API
     'cloudinary',
     'cloudinary_storage',
+    
 ]
 
 # ----------------------- Middleware -----------------------
