@@ -201,7 +201,7 @@ python manage.py test
 
 ## 📄 Documentación técnica
 
-Toda la documentación detallada del proyecto —incluyendo análisis, diseño, modelado de datos, endpoints de API, despliegue, pruebas, y manual de usuario— está disponible en formato Markdown en la carpeta docs/.
+Toda la documentación detallada del proyecto —incluyendo análisis, diseño, modelado de datos, endpoints de API, despliegue, pruebas, y manual de usuario— está disponible en formato Markdown en la carpeta `docs/`
 
 Ahí encontrarás una guía completa del sistema, ideal para revisores técnicos, ampliaciones futuras o instalación en nuevos entornos.
 
