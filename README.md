@@ -1,6 +1,14 @@
+
 # 🐾 AnimalesMasquefa
 
 **AnimalesMasquefa** es una plataforma web full-stack desarrollada como Trabajo de Fin de Grado. Su objetivo es ofrecer una solución integral para la gestión de un refugio de animales. Integra funcionalidades administrativas, automatizaciones, y experiencia de usuario accesible, todo construido con una arquitectura moderna basada en Django y React.
+
+---
+
+## 🌐 Ver el proyecto en línea
+
+Puedes ver la web funcionando aquí:  
+🔗 [https://animalistesmasquefa.netlify.app/](https://animalistesmasquefa.netlify.app/)
 
 ---
 
@@ -35,7 +43,6 @@ root/
 * **Jet Dashboard**: UI avanzada en admin
 * **Swagger + Redoc**: Documentación REST interactiva
 * **Comandos custom**:
-
   * `migrar_archivos_a_cloudinary`
   * `seed_real_data`
 
@@ -84,7 +91,6 @@ root/
 
 * Emails HTML responsivos (Jinja2 templates)
 * Plantillas para:
-
   * Nuevas solicitudes
   * Nuevos animales y noticias
   * Contacto desde frontend
